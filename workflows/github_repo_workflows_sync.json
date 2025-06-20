@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T20:59:59.123Z",
+  "updatedAt": "2025-06-20T21:17:07.303Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -63,7 +63,7 @@
           "value": "={{ $json.github_repo_name }}",
           "mode": "name"
         },
-        "filePath": "=/workflows"
+        "filePath": "=/{{ $json.repo_workflows_path }}"
       },
       "id": "174b78dc-e584-4fc1-82a2-0e58b4a98b36",
       "name": "List files from repo",
@@ -149,7 +149,7 @@
           "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
           "mode": "name"
         },
-        "filePath": "=workflows/{{ $node['Edit for Upload'].json.fileName }}",
+        "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}/{{ $node['Edit for Upload'].json.fileName }}",
         "fileContent": "={{ $('To base64').item.json.data }}",
         "commitMessage": "=n8n_backup_sync-{{ $node['Edit for Upload'].json.commitDate }}",
         "additionalParameters": {
@@ -235,7 +235,7 @@
           "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
           "mode": "name"
         },
-        "filePath": "=workflows/{{ $node['Edit for Update'].json.fileName }}",
+        "filePath": "={{ $('Set GitHub Details').item.json.repo_workflows_path }}/{{ $node['Edit for Update'].json.fileName }}",
         "fileContent": "={{ $('To base').item.json.data }}",
         "commitMessage": "=n8n_backup_sync-{{ $('Edit for Update').item.json.commitDate }}"
       },
@@ -561,6 +561,12 @@
               "name": "github_repo_name",
               "value": "n8n_docker_stack",
               "type": "string"
+            },
+            {
+              "id": "f4f1f0c3-7a89-427c-942f-d0e74ba4583f",
+              "name": "repo_workflows_path",
+              "value": "workflows",
+              "type": "string"
             }
           ]
         },
@@ -815,7 +821,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "6f62dfaa-a45f-4fa2-be20-69e1422aa604",
+  "versionId": "f8dfa54c-eb76-40f0-80d8-18cdab254091",
   "triggerCount": 1,
   "tags": [
     {
