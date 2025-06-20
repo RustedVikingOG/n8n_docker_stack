@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-06-19T18:04:31.741Z",
-  "updatedAt": "2025-06-20T16:18:48.408Z",
-  "id": "Mv9BekAAL5c6th84",
+  "createdAt": "2025-06-20T15:31:37.294Z",
+  "updatedAt": "2025-06-20T16:18:43.298Z",
+  "id": "nv8ZhuBuWff6ZgAL",
   "name": "MCP N8N Workflows Server",
   "active": false,
   "isArchived": true,
@@ -1706,7 +1706,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "578f162d-1f1b-4461-a8b0-e76445745c3d",
+  "versionId": "0a31e64c-19c9-4cfa-8015-911ba6787fe2",
   "triggerCount": 0,
   "tags": []
 }
