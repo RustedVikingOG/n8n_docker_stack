@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-06-20T15:28:21.004Z",
-  "updatedAt": "2025-06-20T15:28:21.004Z",
+  "updatedAt": "2025-06-20T16:18:45.187Z",
   "id": "SaFZe6qzdvyAZboY",
   "name": "MCP N8N Workflows Server",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "id": "e3ed1048-bad0-4e91-bfb5-aef3e1883de4",
@@ -1706,7 +1706,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": null,
+  "versionId": "f6bc8ef5-d9ec-4581-bdef-f820269215a2",
   "triggerCount": 0,
   "tags": []
 }
