@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:52.198Z",
-  "updatedAt": "2025-06-20T16:18:33.701Z",
+  "updatedAt": "2025-06-20T18:12:16.682Z",
   "id": "deI3HbMGt6dIZr4O",
   "name": "github_workflows_backup",
   "active": false,
@@ -404,7 +404,14 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "82bb55b8-a084-471b-bb20-4057d9c7cb0c",
+  "versionId": "8d1b4fe7-d924-4dc0-b4d7-684b37166ebe",
   "triggerCount": 0,
-  "tags": []
+  "tags": [
+    {
+      "createdAt": "2025-06-20T15:54:28.386Z",
+      "updatedAt": "2025-06-20T15:54:28.386Z",
+      "id": "oiAlopPbS90SR7YK",
+      "name": "github"
+    }
+  ]
 }
