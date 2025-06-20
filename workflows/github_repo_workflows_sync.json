@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T20:25:29.925Z",
+  "updatedAt": "2025-06-20T20:46:19.827Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -16,8 +16,8 @@
       "name": "Create new workflow in n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        1300,
-        740
+        1520,
+        780
       ],
       "typeVersion": 1,
       "credentials": {
@@ -105,7 +105,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        360,
+        580,
         400
       ],
       "id": "3dcf4423-8024-4797-adee-71912ba87c2b",
@@ -166,7 +166,7 @@
       "name": "Upload file",
       "type": "n8n-nodes-base.github",
       "position": [
-        1960,
+        2180,
         -80
       ],
       "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
@@ -190,7 +190,7 @@
       "name": "Json file",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
-        1300,
+        1520,
         -80
       ],
       "typeVersion": 1.1
@@ -204,7 +204,7 @@
       "name": "To base64",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        1520,
+        1740,
         -80
       ],
       "typeVersion": 1
@@ -219,7 +219,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1180,
+        1400,
         180
       ],
       "id": "e5208d64-7f41-4be4-ad09-313aeb5fa89d",
@@ -249,7 +249,7 @@
       "name": "Update file",
       "type": "n8n-nodes-base.github",
       "position": [
-        2780,
+        3000,
         560
       ],
       "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
@@ -273,7 +273,7 @@
       "name": "Json file1",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
-        2120,
+        2340,
         560
       ],
       "typeVersion": 1.1
@@ -287,7 +287,7 @@
       "name": "To base",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        2340,
+        2560,
         560
       ],
       "typeVersion": 1
@@ -307,7 +307,7 @@
       "type": "n8n-nodes-base.compareDatasets",
       "typeVersion": 2.3,
       "position": [
-        820,
+        1040,
         280
       ],
       "id": "eee2bfd1-e0e3-4db5-b4da-1bbc189f45e7",
@@ -328,7 +328,7 @@
       "name": "Update workflow in n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        1900,
+        2120,
         300
       ],
       "typeVersion": 1,
@@ -342,12 +342,12 @@
     {
       "parameters": {
         "language": "python",
-        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('Decode to json').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
+        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If n8n before GitHub').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('Decode to json').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
+        1900,
         300
       ],
       "id": "09d43ee5-7a21-47cd-8bec-45ae16e8422f",
@@ -356,12 +356,12 @@
     {
       "parameters": {
         "language": "python",
-        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('n8n').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
+        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If n8n before GitHub').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('n8n').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1680,
+        1900,
         560
       ],
       "id": "d3be821f-a331-4dc7-993d-6af348fb1fb2",
@@ -376,7 +376,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1900,
+        2120,
         560
       ],
       "id": "2a173594-512b-4308-b685-540bac3e2338",
@@ -406,7 +406,7 @@
       "name": "Edit for Upload",
       "type": "n8n-nodes-base.set",
       "position": [
-        1740,
+        1960,
         -80
       ],
       "typeVersion": 3.4
@@ -435,7 +435,7 @@
       "name": "Edit for Update",
       "type": "n8n-nodes-base.set",
       "position": [
-        2560,
+        2780,
         560
       ],
       "typeVersion": 3.4
@@ -448,8 +448,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1180,
-        -180
+        1400,
+        -200
       ],
       "typeVersion": 1,
       "id": "1193d962-fb0d-4b9e-b94c-04c8942860e4",
@@ -464,8 +464,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1180,
-        620
+        1400,
+        640
       ],
       "typeVersion": 1,
       "id": "e48eda08-7f73-46d6-ba81-f9e4b008fec3",
@@ -498,8 +498,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1300,
-        420
+        1520,
+        400
       ],
       "id": "c1909c33-d3f0-4d24-b4d7-fdf1e8074398",
       "name": "If n8n before GitHub"
@@ -514,10 +514,43 @@
       "name": "Decode to json",
       "type": "n8n-nodes-base.set",
       "position": [
-        580,
+        800,
         400
       ],
       "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b9ed0bad-4ebe-4378-807e-1a6082c4461d",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "placeholder",
+              "operator": {
+                "type": "string",
+                "operation": "notContains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        360,
+        400
+      ],
+      "id": "102aadd9-ace3-4fc6-a9a9-ca546362373e",
+      "name": "Filter"
     }
   ],
   "connections": {
@@ -541,7 +574,7 @@
       "main": [
         [
           {
-            "node": "GitHub",
+            "node": "Filter",
             "type": "main",
             "index": 0
           }
@@ -723,6 +756,17 @@
           }
         ]
       ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -737,7 +781,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "89e16496-4f02-4ab7-a476-825c03e5736a",
+  "versionId": "4efcb5b1-d549-4f3e-9ca7-36b6af06df55",
   "triggerCount": 1,
   "tags": [
     {
