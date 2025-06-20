@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T20:57:08.542Z",
+  "updatedAt": "2025-06-20T20:58:02.306Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -147,7 +147,7 @@
         "repository": {
           "__rl": true,
           "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
-          "mode": "url"
+          "mode": "name"
         },
         "filePath": "=workflows/{{ $node['Edit for Upload'].json.fileName }}",
         "fileContent": "={{ $('To base64').item.json.data }}",
@@ -801,7 +801,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "120efa90-1e38-4dc3-b76d-591a665626c0",
+  "versionId": "778a9bd3-01e9-437e-80ef-13bb98b983d1",
   "triggerCount": 1,
   "tags": [
     {
