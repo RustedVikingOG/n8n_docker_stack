@@ -1,0 +1,746 @@
+{
+  "createdAt": "2025-06-20T15:54:24.379Z",
+  "updatedAt": "2025-06-20T19:45:36.414Z",
+  "id": "zlH1bFBsYAWpBVVw",
+  "name": "github_repo_workflows_sync",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{  $json.content.base64Decode() }}",
+        "options": {}
+      },
+      "id": "fd1022a0-4f67-4603-bf94-68415776c587",
+      "name": "Decode workflow content to json",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        580,
+        400
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "workflowObject": "={{ $json.toJsonString()  }}",
+        "requestOptions": {}
+      },
+      "id": "ffc98138-8afa-4cd6-8ba4-b235cc18c739",
+      "name": "Create new workflow in n8n",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1020,
+        680
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "n8nApi": {
+          "id": "KOqGA1i2EbNkTR2k",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ]
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -80,
+        150
+      ],
+      "id": "d4891039-f8d2-465b-bbb6-098050f9e06c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "owner": {
+          "__rl": true,
+          "value": "RustedVikingOG",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_docker_stack",
+          "mode": "list",
+          "cachedResultName": "n8n_docker_stack",
+          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+        },
+        "filePath": "=/workflows"
+      },
+      "id": "174b78dc-e584-4fc1-82a2-0e58b4a98b36",
+      "name": "List files from repo",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        140,
+        400
+      ],
+      "webhookId": "0614066f-212d-4f9e-9da2-fa4a80b44baf",
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "RustedVikingOG",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_docker_stack",
+          "mode": "name"
+        },
+        "filePath": "={{ $json.path }}",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        360,
+        400
+      ],
+      "id": "3dcf4423-8024-4797-adee-71912ba87c2b",
+      "name": "GitHub",
+      "webhookId": "71ad7d84-99cd-4fbd-a365-52537e69525b",
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [
+        140,
+        200
+      ],
+      "id": "315a2e65-1c4d-46b4-b17d-b949c776c116",
+      "name": "n8n",
+      "credentials": {
+        "n8nApi": {
+          "id": "KOqGA1i2EbNkTR2k",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "value": "RustedVikingOG",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_docker_stack",
+          "mode": "list",
+          "cachedResultName": "n8n_docker_stack",
+          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+        },
+        "filePath": "=workflows/{{ $node['n8n - Commit date & file name'].json.fileName }}",
+        "fileContent": "={{ $('To base64').item.json.data }}",
+        "commitMessage": "=n8n_backup_sync-{{ $node['n8n - Commit date & file name'].json.commitDate }}",
+        "additionalParameters": {
+          "branch": {
+            "branch": "main"
+          }
+        }
+      },
+      "id": "404e87cf-e561-4807-865a-26a6109c228f",
+      "name": "Upload file",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        1900,
+        0
+      ],
+      "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true
+        }
+      },
+      "id": "aee4f541-7ff4-441d-9c6b-1545676be55a",
+      "name": "Json file",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        1240,
+        0
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "id": "9047c039-ef8e-4fb2-b58c-3056f02366c7",
+      "name": "To base64",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        1460,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8ccf743b-3a66-44c0-a30b-72a1d4bcf60b",
+              "leftValue": "={{ $json.different.updatedAt.inputA }}",
+              "rightValue": "={{ $json.different.updatedAt.inputB }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1240,
+        300
+      ],
+      "id": "c1909c33-d3f0-4d24-b4d7-fdf1e8074398",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "content": "## CHECK\n\n**IF TRUE** github workflow is the most recent, n8n to be updated\n**IF FALSE** n8n workflow is the most recent, github to be updated\n\n",
+        "height": 520,
+        "width": 1380,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        180
+      ],
+      "id": "e5208d64-7f41-4be4-ad09-313aeb5fa89d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "RustedVikingOG",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "n8n_docker_stack",
+          "mode": "list",
+          "cachedResultName": "n8n_docker_stack",
+          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+        },
+        "filePath": "=workflows/{{ $node['inputA - Commit date & file name'].json.fileName }}",
+        "fileContent": "={{ $('To base').item.json.data }}",
+        "commitMessage": "=n8n_backup_sync-{{ $('inputA - Commit date & file name').item.json.commitDate }}"
+      },
+      "id": "138bd609-541a-46d6-aa1e-792e85a58c05",
+      "name": "Update file",
+      "type": "n8n-nodes-base.github",
+      "position": [
+        2560,
+        520
+      ],
+      "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "options": {
+          "format": true
+        }
+      },
+      "id": "72bd601d-fdce-4643-a26d-23e95f278110",
+      "name": "Json file1",
+      "type": "n8n-nodes-base.convertToFile",
+      "position": [
+        1900,
+        520
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "id": "3974d157-1135-4068-bc3e-b295917cd49b",
+      "name": "To base",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        2120,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "id",
+              "field2": "id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        800,
+        279
+      ],
+      "id": "eee2bfd1-e0e3-4db5-b4da-1bbc189f45e7",
+      "name": "n8n vs GitHub"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $json.dataset.id }}",
+          "mode": "id"
+        },
+        "workflowObject": "={{ $json.dataset.toJsonString() }}",
+        "requestOptions": {}
+      },
+      "id": "a94d4e6e-a250-4fe8-a092-a9e1697745c5",
+      "name": "Update workflow in n8n",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1680,
+        320
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "n8nApi": {
+          "id": "KOqGA1i2EbNkTR2k",
+          "name": "n8n account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('Decode workflow content to json').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        320
+      ],
+      "id": "09d43ee5-7a21-47cd-8bec-45ae16e8422f",
+      "name": "Code - InputB"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "# Get the desired workflow name\nworkflow_id = _('If').first().json['same']['id']\n\n# Get all decoded workflow items\nall_decoded = _('n8n').all()\n\n# Filter for the matching one\nmatched = [\n    item.json \n    for item in all_decoded \n    if item.json.get('id') == workflow_id\n]\n\n# If there's a match, return it (or empty if none)\nif matched:\n    return [{'json': {'dataset': matched[0]}}]\nelse:\n    return []\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        520
+      ],
+      "id": "d3be821f-a331-4dc7-993d-6af348fb1fb2",
+      "name": "Code - InputA"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $json.dataset }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        520
+      ],
+      "id": "2a173594-512b-4308-b685-540bac3e2338",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe4a36ef-9f04-40e3-99bd-cc517a49b440",
+              "name": "commitDate",
+              "type": "string",
+              "value": "={{ $now.format('dd-MM-yyyy/H:mm') }}"
+            },
+            {
+              "id": "b0fe1bcc-e79c-4a6b-b8b4-44222c8bf4e8",
+              "name": "fileName",
+              "type": "string",
+              "value": "={{\n$('Code - InputA').item.json.dataset.name.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$node['Code - InputA'].json.dataset.tags?.[0]?.name? '--' + $node['Code - InputA'].json.dataset.tags[0].name: ''\n}}.json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "911736bd-1c6d-4b49-ade2-52d95f075a7f",
+      "name": "inputA - Commit date & file name",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2340,
+        520
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        450
+      ],
+      "id": "f7bcb075-c419-4dd2-a6ce-6922a89ef3d6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe4a36ef-9f04-40e3-99bd-cc517a49b440",
+              "name": "commitDate",
+              "type": "string",
+              "value": "={{ $now.format('dd-MM-yyyy/H:mm') }}"
+            },
+            {
+              "id": "b0fe1bcc-e79c-4a6b-b8b4-44222c8bf4e8",
+              "name": "fileName",
+              "type": "string",
+              "value": "={{$('n8n vs GitHub').item.json.name\n.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$('n8n vs GitHub').item.json.tags?.[0]?.name? '--' + $node['Code - InputA'].json.dataset.tags[0].name: ''\n}}.json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7a43de98-2d25-4d0f-9b7c-47258dc7b405",
+      "name": "n8n - Commit date & file name",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1680,
+        0
+      ],
+      "typeVersion": 3.4
+    }
+  ],
+  "connections": {
+    "Decode workflow content to json": {
+      "main": [
+        [
+          {
+            "node": "n8n vs GitHub",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List files from repo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List files from repo": {
+      "main": [
+        [
+          {
+            "node": "GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub": {
+      "main": [
+        [
+          {
+            "node": "Decode workflow content to json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "n8n vs GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Json file": {
+      "main": [
+        [
+          {
+            "node": "To base64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "To base64": {
+      "main": [
+        [
+          {
+            "node": "n8n - Commit date & file name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code - InputB",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code - InputA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Json file1": {
+      "main": [
+        [
+          {
+            "node": "To base",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "To base": {
+      "main": [
+        [
+          {
+            "node": "inputA - Commit date & file name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n vs GitHub": {
+      "main": [
+        [
+          {
+            "node": "Json file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create new workflow in n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - InputB": {
+      "main": [
+        [
+          {
+            "node": "Update workflow in n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - InputA": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Json file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inputA - Commit date & file name": {
+      "main": [
+        [
+          {
+            "node": "Update file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "List files from repo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n - Commit date & file name": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "6c034314-faea-4beb-b9bb-cb7fe77cff50",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-06-20T15:54:28.386Z",
+      "updatedAt": "2025-06-20T15:54:28.386Z",
+      "id": "oiAlopPbS90SR7YK",
+      "name": "github"
+    }
+  ]
+}
