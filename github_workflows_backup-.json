@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:52.198Z",
-  "updatedAt": "2025-06-20T16:13:33.252Z",
+  "updatedAt": "2025-06-20T16:18:33.701Z",
   "id": "deI3HbMGt6dIZr4O",
   "name": "github_workflows_backup",
   "active": false,
@@ -35,7 +35,13 @@
         340,
         140
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "n8nApi": {
+          "id": "KOqGA1i2EbNkTR2k",
+          "name": "n8n account"
+        }
+      }
     },
     {
       "parameters": {
@@ -94,18 +100,19 @@
     },
     {
       "parameters": {
-        "authentication": "oAuth2",
         "resource": "file",
         "operation": "edit",
         "owner": {
           "__rl": true,
-          "mode": "name",
-          "value": ""
+          "value": "RustedVikingOG",
+          "mode": "name"
         },
         "repository": {
           "__rl": true,
+          "value": "n8n_docker_stack",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "n8n_docker_stack",
+          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
         },
         "filePath": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
@@ -119,21 +126,28 @@
         60
       ],
       "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
     },
     {
       "parameters": {
-        "authentication": "oAuth2",
         "resource": "file",
         "owner": {
           "__rl": true,
-          "mode": "name",
-          "value": ""
+          "value": "RustedVikingOG",
+          "mode": "name"
         },
         "repository": {
           "__rl": true,
+          "value": "n8n_docker_stack",
           "mode": "list",
-          "value": ""
+          "cachedResultName": "n8n_docker_stack",
+          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
         },
         "filePath": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
@@ -147,7 +161,13 @@
         220
       ],
       "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "uJglpW9ievZkAsDT",
+          "name": "GitHub account"
+        }
+      }
     },
     {
       "parameters": {
@@ -380,9 +400,11 @@
     "executionOrder": "v1"
   },
   "staticData": null,
-  "meta": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "e206a269-2c58-4818-867c-a87b0ebaa238",
+  "versionId": "82bb55b8-a084-471b-bb20-4057d9c7cb0c",
   "triggerCount": 0,
   "tags": []
 }
