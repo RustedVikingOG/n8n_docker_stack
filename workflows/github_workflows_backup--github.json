@@ -1,7 +1,7 @@
 {
-  "createdAt": "2025-06-20T15:54:52.198Z",
-  "updatedAt": "2025-06-20T18:12:16.682Z",
-  "id": "deI3HbMGt6dIZr4O",
+  "createdAt": "2025-06-20T19:58:20.906Z",
+  "updatedAt": "2025-06-20T20:11:23.344Z",
+  "id": "R0xbN7OeiSOW1rY2",
   "name": "github_workflows_backup",
   "active": false,
   "isArchived": false,
@@ -14,11 +14,11 @@
           ]
         }
       },
-      "id": "2c7d7c0f-4935-4c1b-a4f6-89ab08bf9dba",
+      "id": "6e763e09-136b-4cb0-9a57-1d0bdb64ac26",
       "name": "Schedule Triggerz",
       "type": "n8n-nodes-base.scheduleTrigger",
       "position": [
-        -140,
+        -200,
         140
       ],
       "typeVersion": 1.2
@@ -28,7 +28,7 @@
         "filters": {},
         "requestOptions": {}
       },
-      "id": "e30ef963-1c94-43d9-92a2-aae6acd39b6d",
+      "id": "6aa78fa9-dce9-46ab-bb0b-a64b2a1ba533",
       "name": "Retrieve workflows",
       "type": "n8n-nodes-base.n8n",
       "position": [
@@ -54,7 +54,7 @@
         },
         "options": {}
       },
-      "id": "29c22721-a120-411b-96ba-94ba1ca1c348",
+      "id": "f659e0c7-85cf-4870-b199-8e31126e5535",
       "name": "Aggregate",
       "type": "n8n-nodes-base.aggregate",
       "position": [
@@ -81,14 +81,14 @@
         },
         "filePath": "=/workflows"
       },
-      "id": "22b6e01c-cb0e-4c0e-a684-fc0982bab4df",
+      "id": "9495cc65-fade-430c-a325-cb45fc8c3049",
       "name": "List files from repo",
       "type": "n8n-nodes-base.github",
       "position": [
         20,
         140
       ],
-      "webhookId": "354d699e-44b0-4444-9d31-af7fd4ff5561",
+      "webhookId": "78dc5f91-509a-4627-94df-017923d21f8d",
       "typeVersion": 1,
       "alwaysOutputData": true,
       "credentials": {
@@ -114,18 +114,18 @@
           "cachedResultName": "n8n_docker_stack",
           "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
         },
-        "filePath": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json",
+        "filePath": "=workflows/{{$('Retrieve workflows').item.json.name\n.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$('Retrieve workflows').item.json.tags?.[0]?.name? '--' + $('Retrieve workflows').item.json.tags[0].name: ''\n}}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
-        "commitMessage": "=backup-{{ $('Commit date & file name').item.json.commitDate }}"
+        "commitMessage": "=n8n_backup-{{ $('Commit date & file name').item.json.commitDate }}"
       },
-      "id": "a5a2b6fe-bd94-4ad6-8fa9-dc20dcbd047b",
+      "id": "c3745791-cce5-4283-96a0-eac32aaa5e3b",
       "name": "Update file",
       "type": "n8n-nodes-base.github",
       "position": [
         1140,
         60
       ],
-      "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
+      "webhookId": "bd99a162-fb2c-41a1-9a79-b3909cfc398c",
       "typeVersion": 1,
       "credentials": {
         "githubApi": {
@@ -149,18 +149,18 @@
           "cachedResultName": "n8n_docker_stack",
           "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
         },
-        "filePath": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json",
+        "filePath": "={{$('Retrieve workflows').item.json.name\n.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$('Retrieve workflows').item.json.tags?.[0]?.name? '--' + $('Retrieve workflows').item.json.tags[0].name: ''\n}}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
         "commitMessage": "=backup-{{ $node['Commit date & file name'].json.commitDate }}"
       },
-      "id": "45524310-d1a7-4093-a568-69b37b498ddf",
+      "id": "e5902eb8-efbb-44a9-8286-97afecc1cab2",
       "name": "Upload file",
       "type": "n8n-nodes-base.github",
       "position": [
         1140,
         220
       ],
-      "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
+      "webhookId": "ed4c0065-237b-4f80-b971-58e5e8d388fa",
       "typeVersion": 1,
       "credentials": {
         "githubApi": {
@@ -176,12 +176,12 @@
             {
               "value1": "={{ $('Aggregate').item.json.name }}",
               "operation": "contains",
-              "value2": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json"
+              "value2": "={{$('Retrieve workflows').item.json.name\n.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$('Retrieve workflows').item.json.tags?.[0]?.name? '--' + $('Retrieve workflows').item.json.tags[0].name: ''\n}}.json"
             }
           ]
         }
       },
-      "id": "1fb9e6a1-c728-4a98-bcdf-cd9d40ede527",
+      "id": "c36d97b6-b8bb-47c8-b306-136eb91cc30c",
       "name": "Check if file exists",
       "type": "n8n-nodes-base.if",
       "position": [
@@ -198,7 +198,7 @@
           "format": true
         }
       },
-      "id": "3ec71463-6188-4637-af29-3d8559955475",
+      "id": "e2183d38-0277-4327-8afe-3a1d55cdc0aa",
       "name": "Json file",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
@@ -212,7 +212,7 @@
         "operation": "binaryToPropery",
         "options": {}
       },
-      "id": "606338b4-326f-48f7-bac3-8c249ccc843f",
+      "id": "cf6d7d10-0d95-4f24-a2c7-cfcdfe0cfb64",
       "name": "To base64",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
@@ -228,7 +228,7 @@
         "width": 300,
         "color": 5
       },
-      "id": "2fd1228b-afce-41fe-8842-97f14ac58b55",
+      "id": "5902da31-f353-407b-a0c2-368520b05a04",
       "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -249,15 +249,15 @@
             },
             {
               "id": "b0fe1bcc-e79c-4a6b-b8b4-44222c8bf4e8",
-              "name": "fileName",
+              "name": "=fileName",
               "type": "string",
-              "value": "={{ $('Retrieve workflows').item.json.name.replace(/\\s+/g, '-').toLowerCase() }}-{{ $('Retrieve workflows').item.json.tags[0].name }}.json"
+              "value": "={{$('Retrieve workflows').item.json.name\n.trim().replace(/\\s+/g, '-').toLowerCase()\n}}{{\n$('Retrieve workflows').item.json.tags?.[0]?.name? '--' + $('Retrieve workflows').item.json.tags[0].name: ''\n}}.json"
             }
           ]
         },
         "options": {}
       },
-      "id": "b66a1913-a5bb-4e87-95b7-31262e74933b",
+      "id": "bf94c705-47f9-4f2a-831e-2bbc9322c621",
       "name": "Commit date & file name",
       "type": "n8n-nodes-base.set",
       "position": [
@@ -273,7 +273,7 @@
         "width": 460,
         "color": 3
       },
-      "id": "73d43be3-9a91-40fb-ad93-6443842e8718",
+      "id": "087e85e1-9030-49a5-a66a-0091ba72eb31",
       "name": "Sticky Note2",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -289,7 +289,7 @@
         "width": 460,
         "color": 4
       },
-      "id": "cd2b195a-2fe6-45d6-b480-6dd19dda9cf4",
+      "id": "04b8d4fc-94c6-4c85-a34f-15e1553ded28",
       "name": "Sticky Note3",
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -394,18 +394,33 @@
           }
         ]
       ]
+    },
+    "Schedule Triggerz": {
+      "main": [
+        [
+          {
+            "node": "List files from repo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Triggerz": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "8d1b4fe7-d924-4dc0-b4d7-684b37166ebe",
-  "triggerCount": 0,
+  "versionId": "c600882e-cf19-4f6e-b1e0-2db0f15686de",
+  "triggerCount": 1,
   "tags": [
     {
       "createdAt": "2025-06-20T15:54:28.386Z",
