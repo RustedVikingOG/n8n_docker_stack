@@ -157,3 +157,48 @@ tar -czf n8n-backup-$(date +%Y%m%d).tar.gz workflows/ credentials/
 # Backup database
 docker-compose exec postgres pg_dump -U n8n n8n > n8n-db-backup-$(date +%Y%m%d).sql
 ```
+
+
+## Env Vars used
+
+### for n8n:
+#### Database configuration
+- DB_TYPE
+- DB_POSTGRESDB_HOST
+- DB_POSTGRESDB_PORT
+- DB_POSTGRESDB_DATABASE
+- DB_POSTGRESDB_USER
+- DB_POSTGRESDB_PASSWORD
+
+#### n8n configuration
+- N8N_HOST
+- N8N_PORT
+- N8N_PROTOCOL
+- WEBHOOK_URL
+
+#### Security
+- N8N_BASIC_AUTH_ACTIVE
+- N8N_BASIC_AUTH_USER
+- N8N_BASIC_AUTH_PASSWORD
+
+#### Execution settings
+- EXECUTIONS_PROCESS
+- EXECUTIONS_DATA_SAVE_ON_ERROR
+- EXECUTIONS_DATA_SAVE_ON_SUCCESS
+- EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS
+
+#### Timezone
+- GENERIC_TIMEZONE
+- TZ
+
+#### Production environment
+- NODE_ENV
+
+#### Custom nodes
+- N8N_COMMUNITY_PACKAGES_ENABLED
+- N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE
+
+### for postgres:
+- POSTGRES_DB
+- POSTGRES_USER
+- POSTGRES_PASSWORD
