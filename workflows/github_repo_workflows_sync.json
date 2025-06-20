@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T20:46:19.827Z",
+  "updatedAt": "2025-06-20T20:54:28.890Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -16,7 +16,7 @@
       "name": "Create new workflow in n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        1520,
+        1740,
         780
       ],
       "typeVersion": 1,
@@ -43,8 +43,8 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -120,
-        300
+        -260,
+        280
       ],
       "id": "d4891039-f8d2-465b-bbb6-098050f9e06c",
       "name": "Schedule Trigger"
@@ -55,15 +55,13 @@
         "operation": "list",
         "owner": {
           "__rl": true,
-          "value": "RustedVikingOG",
+          "value": "={{ $json.github_account_name }}",
           "mode": "name"
         },
         "repository": {
           "__rl": true,
-          "value": "n8n_docker_stack",
-          "mode": "list",
-          "cachedResultName": "n8n_docker_stack",
-          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+          "value": "={{ $json.github_repo_name }}",
+          "mode": "name"
         },
         "filePath": "=/workflows"
       },
@@ -71,7 +69,7 @@
       "name": "List files from repo",
       "type": "n8n-nodes-base.github",
       "position": [
-        140,
+        360,
         400
       ],
       "webhookId": "0614066f-212d-4f9e-9da2-fa4a80b44baf",
@@ -90,12 +88,12 @@
         "operation": "get",
         "owner": {
           "__rl": true,
-          "value": "RustedVikingOG",
+          "value": "={{ $('Set GitHub Details').item.json.github_account_name }}",
           "mode": "name"
         },
         "repository": {
           "__rl": true,
-          "value": "n8n_docker_stack",
+          "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
           "mode": "name"
         },
         "filePath": "={{ $json.path }}",
@@ -105,7 +103,7 @@
       "type": "n8n-nodes-base.github",
       "typeVersion": 1.1,
       "position": [
-        580,
+        800,
         400
       ],
       "id": "3dcf4423-8024-4797-adee-71912ba87c2b",
@@ -126,7 +124,7 @@
       "type": "n8n-nodes-base.n8n",
       "typeVersion": 1,
       "position": [
-        360,
+        580,
         200
       ],
       "id": "315a2e65-1c4d-46b4-b17d-b949c776c116",
@@ -143,15 +141,13 @@
         "resource": "file",
         "owner": {
           "__rl": true,
-          "value": "RustedVikingOG",
+          "value": "={{ $('Set GitHub Details').item.json.github_account_name }}",
           "mode": "name"
         },
         "repository": {
           "__rl": true,
-          "value": "n8n_docker_stack",
-          "mode": "list",
-          "cachedResultName": "n8n_docker_stack",
-          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+          "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
+          "mode": "url"
         },
         "filePath": "=workflows/{{ $node['Edit for Upload'].json.fileName }}",
         "fileContent": "={{ $('To base64').item.json.data }}",
@@ -166,7 +162,7 @@
       "name": "Upload file",
       "type": "n8n-nodes-base.github",
       "position": [
-        2180,
+        2400,
         -80
       ],
       "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
@@ -190,7 +186,7 @@
       "name": "Json file",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
-        1520,
+        1740,
         -80
       ],
       "typeVersion": 1.1
@@ -204,7 +200,7 @@
       "name": "To base64",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        1740,
+        1960,
         -80
       ],
       "typeVersion": 1
@@ -219,7 +215,7 @@
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1400,
+        1620,
         180
       ],
       "id": "e5208d64-7f41-4be4-ad09-313aeb5fa89d",
@@ -231,15 +227,13 @@
         "operation": "edit",
         "owner": {
           "__rl": true,
-          "value": "RustedVikingOG",
+          "value": "={{ $('Set GitHub Details').item.json.github_account_name }}",
           "mode": "name"
         },
         "repository": {
           "__rl": true,
-          "value": "n8n_docker_stack",
-          "mode": "list",
-          "cachedResultName": "n8n_docker_stack",
-          "cachedResultUrl": "https://github.com/RustedVikingOG/n8n_docker_stack"
+          "value": "={{ $('Set GitHub Details').item.json.github_repo_name }}",
+          "mode": "url"
         },
         "filePath": "=workflows/{{ $node['Edit for Update'].json.fileName }}",
         "fileContent": "={{ $('To base').item.json.data }}",
@@ -249,7 +243,7 @@
       "name": "Update file",
       "type": "n8n-nodes-base.github",
       "position": [
-        3000,
+        3220,
         560
       ],
       "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
@@ -273,7 +267,7 @@
       "name": "Json file1",
       "type": "n8n-nodes-base.convertToFile",
       "position": [
-        2340,
+        2560,
         560
       ],
       "typeVersion": 1.1
@@ -287,7 +281,7 @@
       "name": "To base",
       "type": "n8n-nodes-base.extractFromFile",
       "position": [
-        2560,
+        2780,
         560
       ],
       "typeVersion": 1
@@ -307,7 +301,7 @@
       "type": "n8n-nodes-base.compareDatasets",
       "typeVersion": 2.3,
       "position": [
-        1040,
+        1260,
         280
       ],
       "id": "eee2bfd1-e0e3-4db5-b4da-1bbc189f45e7",
@@ -328,7 +322,7 @@
       "name": "Update workflow in n8n",
       "type": "n8n-nodes-base.n8n",
       "position": [
-        2120,
+        2340,
         300
       ],
       "typeVersion": 1,
@@ -347,7 +341,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1900,
+        2120,
         300
       ],
       "id": "09d43ee5-7a21-47cd-8bec-45ae16e8422f",
@@ -361,7 +355,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1900,
+        2120,
         560
       ],
       "id": "d3be821f-a331-4dc7-993d-6af348fb1fb2",
@@ -376,7 +370,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        2120,
+        2340,
         560
       ],
       "id": "2a173594-512b-4308-b685-540bac3e2338",
@@ -406,7 +400,7 @@
       "name": "Edit for Upload",
       "type": "n8n-nodes-base.set",
       "position": [
-        1960,
+        2180,
         -80
       ],
       "typeVersion": 3.4
@@ -435,7 +429,7 @@
       "name": "Edit for Update",
       "type": "n8n-nodes-base.set",
       "position": [
-        2780,
+        3000,
         560
       ],
       "typeVersion": 3.4
@@ -448,7 +442,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1400,
+        1620,
         -200
       ],
       "typeVersion": 1,
@@ -464,7 +458,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        1400,
+        1620,
         640
       ],
       "typeVersion": 1,
@@ -498,7 +492,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1520,
+        1740,
         400
       ],
       "id": "c1909c33-d3f0-4d24-b4d7-fdf1e8074398",
@@ -514,7 +508,7 @@
       "name": "Decode to json",
       "type": "n8n-nodes-base.set",
       "position": [
-        800,
+        1020,
         400
       ],
       "typeVersion": 3.4
@@ -546,11 +540,26 @@
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
-        360,
+        580,
         400
       ],
       "id": "102aadd9-ace3-4fc6-a9a9-ca546362373e",
       "name": "Filter"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"github_account_name\": \"RustedVikingOG\",\n  \"github_repo_name\": \"n8n_docker_stack\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        280
+      ],
+      "id": "0ddf93a8-4db3-4826-a658-8fb4aedb31ce",
+      "name": "Set GitHub Details"
     }
   ],
   "connections": {
@@ -558,12 +567,7 @@
       "main": [
         [
           {
-            "node": "n8n",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "List files from repo",
+            "node": "Set GitHub Details",
             "type": "main",
             "index": 0
           }
@@ -767,6 +771,22 @@
           }
         ]
       ]
+    },
+    "Set GitHub Details": {
+      "main": [
+        [
+          {
+            "node": "List files from repo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -781,7 +801,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "4efcb5b1-d549-4f3e-9ca7-36b6af06df55",
+  "versionId": "836a6779-442e-4cdf-9809-095c2626517b",
   "triggerCount": 1,
   "tags": [
     {
