@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T20:58:02.306Z",
+  "updatedAt": "2025-06-20T20:59:59.123Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -548,8 +548,22 @@
     },
     {
       "parameters": {
-        "mode": "raw",
-        "jsonOutput": "{\n  \"github_account_name\": \"RustedVikingOG\",\n  \"github_repo_name\": \"n8n_docker_stack\"\n}\n",
+        "assignments": {
+          "assignments": [
+            {
+              "id": "850e7497-0f2f-470e-a5a2-a85a0c12aaa2",
+              "name": "github_account_name",
+              "value": "RustedVikingOG",
+              "type": "string"
+            },
+            {
+              "id": "5c2be15a-cb93-4fe4-a512-03a1880b8713",
+              "name": "github_repo_name",
+              "value": "n8n_docker_stack",
+              "type": "string"
+            }
+          ]
+        },
         "options": {}
       },
       "type": "n8n-nodes-base.set",
@@ -801,7 +815,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "778a9bd3-01e9-437e-80ef-13bb98b983d1",
+  "versionId": "6f62dfaa-a45f-4fa2-be20-69e1422aa604",
   "triggerCount": 1,
   "tags": [
     {
