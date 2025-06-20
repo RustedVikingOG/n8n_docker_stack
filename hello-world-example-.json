@@ -1,10 +1,10 @@
 {
   "createdAt": "2025-06-19T18:04:31.741Z",
-  "updatedAt": "2025-06-20T15:31:37.294Z",
+  "updatedAt": "2025-06-20T16:18:40.810Z",
   "id": "hello-world-example",
   "name": "Hello World Example",
   "active": false,
-  "isArchived": false,
+  "isArchived": true,
   "nodes": [
     {
       "parameters": {},
@@ -74,7 +74,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "00000000-0000-0000-0000-000000000000",
+  "versionId": "6703dd27-febf-485b-8c5b-755293bf2a24",
   "triggerCount": 0,
   "tags": []
 }
