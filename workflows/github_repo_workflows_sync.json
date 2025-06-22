@@ -1,6 +1,6 @@
 {
   "createdAt": "2025-06-20T15:54:24.379Z",
-  "updatedAt": "2025-06-20T21:17:07.303Z",
+  "updatedAt": "2025-06-21T07:16:07.972Z",
   "id": "zlH1bFBsYAWpBVVw",
   "name": "github_repo_workflows_sync",
   "active": true,
@@ -526,7 +526,7 @@
             {
               "id": "b9ed0bad-4ebe-4378-807e-1a6082c4461d",
               "leftValue": "={{ $json.name }}",
-              "rightValue": "placeholder",
+              "rightValue": "purpose.md",
               "operator": {
                 "type": "string",
                 "operation": "notContains"
@@ -821,7 +821,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f8dfa54c-eb76-40f0-80d8-18cdab254091",
+  "versionId": "094f7c51-6eca-4d3e-abca-526269653c65",
   "triggerCount": 1,
   "tags": [
     {
