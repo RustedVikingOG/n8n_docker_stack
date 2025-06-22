@@ -1,49 +1,51 @@
-#!/bin/sh
+echo "🔁 Checking existing workflows in n8n..."
 
-echo "🚀 Starting workflow import process..."
-
-# Wait for n8n to be fully initialized
-echo "⏳ Waiting for n8n database to be ready..."
+# Wait for n8n to be ready
+echo "😴 Sleeping for 15 seconds while waiting for n8n..."
 sleep 15
 
-# Check if workflows directory exists and has files
-if [ ! -d "/workflows" ]; then
-    echo "❌ Workflows directory not found at /workflows"
-    exit 0
-fi
+# Get existing workflow IDs from n8n instance
+echo "🔍 Checking n8n list:workflow command..."
+RAW_OUTPUT=$(n8n list:workflow 2>/dev/null)
+echo "Raw n8n output (first 200 chars): ${RAW_OUTPUT:0:200}"
+echo "Raw n8n output (full):"
+echo "$RAW_OUTPUT"
 
-# Count workflow files
-workflow_count=$(find /workflows -name "*.json" -type f | wc -l)
-echo "📁 Found $workflow_count workflow files to import"
-
-if [ "$workflow_count" -eq 0 ]; then
-    echo "ℹ️  No workflow files found in /workflows directory"
-    exit 0
-fi
-
-# Import all workflows from directory
-echo "📥 Importing all workflows from /workflows directory..."
-if n8n import:workflow --input=/workflows --separate 2>&1; then
-    echo "✅ Successfully imported workflows from directory"
-    imported=$workflow_count
-    failed=0
+if [ $? -eq 0 ] && [ -n "$RAW_OUTPUT" ]; then
+  # Try to check if it's JSON format
+  if echo "$RAW_OUTPUT" | jq empty 2>/dev/null; then
+    echo "✅ Output is valid JSON, parsing..."
+    EXISTING_IDS=$(echo "$RAW_OUTPUT" | jq -r '.[].id // empty' 2>/dev/null)
+  else
+    echo "⚠️  Output is not JSON format, trying to parse as table..."
+    # Extract IDs from pipe-separated format (ID|name)
+    EXISTING_IDS=$(echo "$RAW_OUTPUT" | grep '|' | cut -d'|' -f1)
+  fi
 else
-    echo "❌ Failed to import workflows"
-    imported=0
-    failed=$workflow_count
+  echo "⚠️  n8n list:workflow failed or returned empty"
+  EXISTING_IDS=""
 fi
 
-echo ""
-echo "📊 Import Summary:"
-echo "   ✅ Successfully imported: $imported workflows"
-echo "   ❌ Failed to import: $failed workflows"
-echo "   📁 Total processed: $((imported + failed)) workflows"
-echo ""
+# Loop over local workflow files
+for file in /workflows/*.json; do
+  # Extract workflow ID from JSON (handle potential parsing errors)
+  LOCAL_ID=$(jq -r '.id // empty' "$file" 2>/dev/null)
 
-if [ "$imported" -gt 0 ]; then
-    echo "🎉 Workflow import completed successfully!"
-else
-    echo "⚠️  No workflows were imported"
-fi
+  # Skip if null or empty
+  if [ -z "$LOCAL_ID" ] || [ "$LOCAL_ID" = "null" ]; then
+    echo "⚠️  No ID found in $file, uploading as new..."
+    n8n import:workflow --input="$file"
+    continue
+  fi
 
-echo "🏁 Import process finished"
+  # Check if ID already exists
+  echo "🔍 Checking if LOCAL_ID '$LOCAL_ID' exists in EXISTING_IDS:"
+  if echo "$EXISTING_IDS" | grep -Fxq "$LOCAL_ID"; then
+    echo "⏭️  Workflow $LOCAL_ID already exists, skipping $file"
+  else
+    echo "📥 Importing new workflow $file with ID $LOCAL_ID"
+    n8n import:workflow --input="$file"
+  fi
+done
+
+echo "✅ Workflow import check complete"

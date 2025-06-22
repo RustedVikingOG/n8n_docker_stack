@@ -13,7 +13,7 @@ services:
       retries: 10
 
   workflow-importer:
-    image: docker.n8n.io/n8nio/n8n:latest
+    build: .
     restart: "no"
     env_file:
       - .n8n.env
@@ -28,7 +28,7 @@ services:
     command: ["/scripts/import-workflows.sh"]
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:latest
+    build: .
     restart: unless-stopped
     env_file:
       - .n8n.env
