@@ -1,0 +1,196 @@
+{
+  "createdAt": "2025-06-23T16:50:26.088Z",
+  "updatedAt": "2025-06-24T05:26:37.091Z",
+  "id": "wxxx3JsW8rNv8ST5",
+  "name": "zip_make",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -100
+      ],
+      "id": "02c7bab9-0e9c-4062-adc6-c436e793c552",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "cd /files && ls"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "ae4e18cc-bb6c-4349-a2da-3fce621516c7",
+      "name": "Create Zip Archive"
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "inp = _input.first().json.stdout\ninps = inp.split('\\n')\ninps = [x for x in inps if '.md' not in x]\ninps = [x for x in inps if '.tar.gz' not in x]\ninps = [x for x in inps if '.zip' not in x]\nreturn {'inps': inps}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "bb8b2197-2c62-4ff6-9ac1-3307dded38cb",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "command": "=cd /files && zip -r /files/{{ $json.inps[0] }}.zip {{ $json.inps[0] }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        660,
+        0
+      ],
+      "id": "49003593-9b5d-4ddc-aabe-ecd1f9630739",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "path": "8a0fefc5-bdd8-446a-9423-80c2dccd79d0",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        140
+      ],
+      "id": "473ae51c-8e5c-48be-abdb-bab03324293b",
+      "name": "Webhook",
+      "webhookId": "8a0fefc5-bdd8-446a-9423-80c2dccd79d0"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Disposition",
+                "value": "=attachment;filename=\"{{ $('Code').item.json.inps[0] }}.zip\""
+              },
+              {
+                "name": "Content-Type",
+                "value": "={{ $json.mimeType }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1100,
+        0
+      ],
+      "id": "f9d83435-2710-4f11-8092-d7e2c68d14b7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "fileSelector": "=/files/{{ $('Code').item.json.inps[0] }}.zip",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        880,
+        0
+      ],
+      "id": "db538393-a9cc-4d98-9e62-fe8e394b41c6",
+      "name": "Read/Write Files from Disk"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Create Zip Archive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Zip Archive": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Create Zip Archive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "02c6f9d3-3315-4618-b260-da19fba4614b",
+  "triggerCount": 0,
+  "tags": []
+}
