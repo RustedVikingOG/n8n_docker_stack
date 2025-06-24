@@ -1,0 +1,166 @@
+{
+  "createdAt": "2025-06-24T17:46:33.580Z",
+  "updatedAt": "2025-06-24T19:52:20.192Z",
+  "id": "1iddyW0Iw3tks4Sf",
+  "name": "gtree_get",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5fc68220-f050-40e5-b310-f5d6761dbb63",
+              "name": "owner",
+              "value": "={{ $json.owner }}",
+              "type": "string"
+            },
+            {
+              "id": "9c075c4b-6575-4664-936a-0bd8409cb5d8",
+              "name": "repo",
+              "value": "={{ $json.repo }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        0
+      ],
+      "id": "32baca5c-3cd9-47a6-a55f-adf9966762f8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "KyVzJXzAhtZZDBrR",
+          "mode": "list",
+          "cachedResultName": "gtree_creator"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "owner": "={{ $json.owner }}",
+            "repo": "={{ $json.repo }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "path",
+              "displayName": "path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "owner",
+              "displayName": "owner",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "repo",
+              "displayName": "repo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "a879520c-9d97-4202-b00d-6c761edaf47d",
+      "name": "Execute Workflow"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "repo"
+            },
+            {
+              "name": "owner"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        0
+      ],
+      "id": "fd9921aa-d57a-44cf-aa8b-c28c2bece3f2",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b9466b27-8b94-43c9-934f-a0c51c521185",
+  "triggerCount": 0,
+  "tags": [
+    {
+      "createdAt": "2025-06-24T19:24:09.552Z",
+      "updatedAt": "2025-06-24T19:24:09.552Z",
+      "id": "UrrRlGpBiXZQ14iY",
+      "name": "docugen"
+    }
+  ]
+}
