@@ -1,0 +1,132 @@
+{
+  "createdAt": "2025-06-23T17:43:44.141Z",
+  "updatedAt": "2025-06-24T05:26:28.273Z",
+  "id": "ov3qnrAywbYmh4Wn",
+  "name": "zip_send",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "download/:filename",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0c04098e-c0d8-4b27-a6a5-ab56d295fa3d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        0
+      ],
+      "webhookId": "877b9ffd-9f97-446e-9319-3e0060655c70"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "responseDataSource": "set",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Disposition",
+                "value": "attachment"
+              }
+            ]
+          }
+        }
+      },
+      "id": "8bf7f1ca-51da-4585-b38e-cd9cf34a9b33",
+      "name": "Return Binary Data",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://localhost:5678/files/{{ $json.filename }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "id": "25b14a9a-2ad1-449d-ac45-b2161c0df8ec",
+      "name": "Get Test File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "filename",
+              "value": "=someserver.zip"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3feefe47-8c95-4611-bbc3-30720ce924b5",
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Test File": {
+      "main": [
+        [
+          {
+            "node": "Return Binary Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Get Test File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "7265354e-342c-4e2b-b48d-9708a573f5db",
+  "triggerCount": 0,
+  "tags": []
+}
