@@ -44,6 +44,20 @@ services:
       workflow-importer:
         condition: service_completed_successfully
 
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 3 && ollama run llama3.2:3b && wait"]
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+
 volumes:
   postgres_data:
   n8n_data:
+  ollama-data:
