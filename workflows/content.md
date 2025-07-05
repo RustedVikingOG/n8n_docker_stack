@@ -2,15 +2,13 @@
 
 This document provides an index of all n8n workflows available in this folder, with their names and purposes clearly documented.
 
-## Active Workflows
+## Workflows
 
 ### github_repo_workflows_sync
 **File:** `github_repo_workflows_sync.json`
 **Status:** Active
 **Last Updated:** 2025-06-21T07:16:07.972Z
 **Purpose:** Automatically synchronizes n8n workflows between the n8n instance and this GitHub repository. Runs weekly (every Monday) to ensure bidirectional sync, maintaining backups and resolving conflicts by keeping the most recently updated version.
-
-## Inactive Workflows
 
 ### delete_archived_workflows
 **File:** `delete_archived_workflows.json`
