@@ -2,6 +2,74 @@
 
 This document contains the architectural design of the n8n Docker Stack solution with the focus on the high level components and how they interact. Use of the names and their appropriate technologies are required.
 
+## Project Structure Overview
+
+**Core project directories**
+- src/n8n/src/docker-compose.yml - Multi-service orchestration configuration with PostgreSQL, n8n, Ollama, and workflow-importer services
+- src/n8n/src/Dockerfile - Custom n8n image extending official n8n image with jq and zip utilities
+- src/n8n/src/scripts/import-workflows.sh - Intelligent workflow import script with duplicate detection
+- src/n8n/src/workflows/ - Pre-configured workflow JSON definitions automatically imported on startup
+- src/n8n/src/localfiles/ - File operations directory mounted to n8n container with FastAPI example server
+- docs/designs/ - Architecture and use case documentation following AI template standards
+- docs/1.COLLABORATION.md - Comprehensive collaboration guide with setup and debugging instructions
+
+This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, and comprehensive documentation following established AI template standards.
+
+## System Overview Architecture
+
+**Complete System Integration Diagram**
+
+```mermaid
+---
+title: n8n Docker Stack Complete System Architecture
+---
+flowchart TD
+    A["Docker Compose Orchestration"] --> B["PostgreSQL Database Service"]
+    A --> C["Workflow Import Service"]
+    A --> D["n8n Automation Platform"]
+    A --> E["Ollama AI Service"]
+    A --> F["FastAPI Example Server"]
+
+    B --> G["Health Check System"]
+    G --> H["Service Dependencies"]
+
+    C --> I["Workflow JSON Processing"]
+    I --> J["Duplicate Detection Logic"]
+    J --> K["n8n CLI Integration"]
+
+    D --> L["Web Interface :5678"]
+    D --> M["Workflow Execution Engine"]
+    D --> N["API Endpoints"]
+    D --> O["File System Operations"]
+
+    E --> P["AI Model Serving :11434"]
+    P --> Q["llama3.2:3b Model"]
+
+    F --> R["Development API :8010"]
+    R --> S["HTTP Testing Endpoints"]
+
+    H --> C
+    H --> D
+
+    K --> D
+    O --> T["Local Files Mount"]
+    T --> U["Workflow File Operations"]
+
+    M --> P
+    M --> R
+
+    V["Persistent Volumes"] --> B
+    V --> D
+    V --> E
+
+    W["Environment Configuration"] --> B
+    W --> D
+
+    X["Host File System"] --> T
+    X --> Y["Workflow JSON Files"]
+    Y --> C
+```
+
 ## High-level Component definitions & use
 
 Describes the definitions and use of each component in the design, its technology and the scope of the use of any services.
@@ -169,14 +237,15 @@ flowchart TD
 
 **Example FastAPI Server Component**
 
-A sample FastAPI server included in the localfiles directory that demonstrates how external services can be integrated with n8n workflows. This component serves as a reference implementation for custom API endpoints that can be called from n8n workflows.
+A sample FastAPI server included in the localfiles/someserver directory that demonstrates how external services can be integrated with n8n workflows. This component serves as a reference implementation for custom API endpoints that can be called from n8n workflows.
 
 **Core Functionality: Example FastAPI Server Component**
 
-- **API Endpoints**: Provides sample REST API endpoints for testing n8n HTTP request nodes
-- **File System Integration**: Located in localfiles directory for easy access from n8n container
+- **API Endpoints**: Provides sample REST API endpoints (root "/" and "/items/{id}") for testing n8n HTTP request nodes
+- **File System Integration**: Located in localfiles/someserver directory for easy access from n8n container via /files mount
 - **Development Reference**: Serves as a template for building custom services that integrate with n8n workflows
-- **Containerized Deployment**: Includes Dockerfile for independent deployment if needed
+- **Containerized Deployment**: Includes Dockerfile with Python 3.12-slim base image for independent deployment
+- **FastAPI Framework**: Uses FastAPI with uvicorn server running on port 8010 for high-performance API operations
 
 **Architecture Diagram of component: Example FastAPI Server Component**
 
@@ -185,21 +254,25 @@ A sample FastAPI server included in the localfiles directory that demonstrates h
 title: Example FastAPI Server Component Architecture
 ---
 flowchart TD
-    A["FastAPI Server"] --> B["REST API Endpoints"]
-    A --> C["Local File System"]
-    A --> D["Python Runtime"]
+    A["FastAPI Server Container"] --> B["REST API Endpoints"]
+    A --> C["Local File System Mount"]
+    A --> D["Python 3.12 Runtime"]
 
     B --> E["Root Endpoint /"]
-    B --> F["Items Endpoint /items/{id}"]
+    B --> F["Items Endpoint /items/{item_id}"]
 
-    C --> G["src/localfiles/someserver/"]
-    G --> H["main.py"]
-    G --> I["requirements.txt"]
-    G --> J["Dockerfile"]
+    C --> G["src/n8n/src/localfiles/someserver/"]
+    G --> H["main.py - FastAPI Application"]
+    G --> I["requirements.txt - Dependencies"]
+    G --> J["Dockerfile - Container Build"]
 
-    D --> K["uvicorn Server"]
-    K --> L["Port 8010"]
+    D --> K["uvicorn ASGI Server"]
+    K --> L["Port 8010 Exposed"]
 
-    A --> M["n8n HTTP Requests"]
-    M --> N["Workflow Integration"]
+    A --> M["n8n Container HTTP Requests"]
+    M --> N["/files Mount Integration"]
+    N --> O["Workflow File Operations"]
+
+    F --> P["Optional Query Parameters"]
+    P --> Q["JSON Response Format"]
 ```

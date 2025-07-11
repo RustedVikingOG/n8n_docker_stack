@@ -3,11 +3,11 @@
 Note: This use_case.md is specific to the n8n Docker Stack implementation. Each use-case describes specific functionality implemented in this automation platform.
 
 **project directories**
-- src/docker-compose.yml - Multi-service orchestration configuration
-- src/Dockerfile - Custom n8n image with utilities
-- src/scripts/ - Workflow import automation scripts
-- src/workflows/ - Pre-configured workflow JSON definitions
-- src/localfiles/ - File operations directory
+- src/n8n/src/docker-compose.yml - Multi-service orchestration configuration
+- src/n8n/src/Dockerfile - Custom n8n image with jq and zip utilities
+- src/n8n/src/scripts/ - Workflow import automation scripts
+- src/n8n/src/workflows/ - Pre-configured workflow JSON definitions
+- src/n8n/src/localfiles/ - File operations directory with FastAPI example server
 
 This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, and AI integration capabilities.
 
@@ -299,13 +299,13 @@ stateDiagram-v2
 
 || definition |
 |--|--|
-| GIVEN | A FastAPI server is available in the localfiles directory with sample endpoints |
+| GIVEN | A FastAPI server is available in the localfiles/someserver directory with sample endpoints |
 | WHEN | n8n workflows need to test HTTP requests or integrate with external APIs |
-| THEN | The FastAPI server provides test endpoints for development and validation of HTTP-based workflow nodes |
+| THEN | The FastAPI server provides test endpoints (/ and /items/{item_id}) for development and validation of HTTP-based workflow nodes |
 
 **State Diagram: Logic flow within feature**
 
-This diagram shows the external service integration process for workflow testing.
+This diagram shows the external service integration process for workflow testing with the actual FastAPI endpoints.
 
 ```mermaid
 ---
@@ -314,9 +314,206 @@ title: External Service Integration State Flow
 stateDiagram-v2
     [*] --> ServiceRequest
     ServiceRequest --> HTTPNodeExecution
-    HTTPNodeExecution --> APIEndpointCall
-    APIEndpointCall --> FastAPIProcessing
-    FastAPIProcessing --> ResponseGeneration
-    ResponseGeneration --> WorkflowContinuation
+    HTTPNodeExecution --> EndpointSelection
+    EndpointSelection --> RootEndpoint
+    EndpointSelection --> ItemsEndpoint
+    RootEndpoint --> HelloWorldResponse
+    ItemsEndpoint --> ItemDataResponse
+    HelloWorldResponse --> WorkflowContinuation
+    ItemDataResponse --> WorkflowContinuation
     WorkflowContinuation --> [*]
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows the interaction between n8n workflows and the FastAPI server for testing HTTP operations.
+
+```mermaid
+---
+title: FastAPI Integration Sequence Flow
+---
+flowchart TD
+    A["n8n HTTP Request Node"] --> B["FastAPI Server :8010"]
+    B --> C{"Endpoint Selection"}
+    C -->|GET /| D["Root Endpoint Handler"]
+    C -->|GET /items/{id}| E["Items Endpoint Handler"]
+    D --> F["Return Hello World JSON"]
+    E --> G["Return Item Data JSON"]
+    F --> H["n8n Response Processing"]
+    G --> H
+    H --> I["Continue Workflow Execution"]
+```
+
+**Data Entity Relationship: Data structure for entities in Feature**
+
+This diagram shows the data relationships for the FastAPI server integration.
+
+```mermaid
+---
+title: FastAPI Server Data Entity Relationships
+---
+erDiagram
+    N8N_WORKFLOW ||--o{ HTTP_REQUEST_NODE : contains
+    HTTP_REQUEST_NODE ||--|| FASTAPI_SERVER : "calls"
+    FASTAPI_SERVER ||--o{ API_ENDPOINTS : exposes
+    API_ENDPOINTS ||--|| ROOT_ENDPOINT : includes
+    API_ENDPOINTS ||--|| ITEMS_ENDPOINT : includes
+
+    ROOT_ENDPOINT {
+        string method "GET"
+        string path "/"
+        json response "Hello World"
+    }
+
+    ITEMS_ENDPOINT {
+        string method "GET"
+        string path "/items/{item_id}"
+        int item_id "path parameter"
+        string q "optional query parameter"
+        json response "item data"
+    }
+
+    FASTAPI_SERVER {
+        string host "0.0.0.0"
+        int port "8010"
+        string framework "FastAPI"
+        string server "uvicorn"
+    }
+```
+
+## USE-CASE: Comprehensive Workflow Collection Management
+
+**Feature 1: Pre-configured Workflow Ecosystem**
+
+|| definition |
+|--|--|
+| GIVEN | The system contains 9 pre-configured workflows covering GitHub sync, project analysis, file management, and cleanup operations |
+| WHEN | The Docker stack is deployed and workflows are automatically imported |
+| THEN | A complete automation ecosystem is available including GitHub synchronization, project tree generation, file archiving, and workflow maintenance |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the comprehensive workflow ecosystem initialization and operation.
+
+```mermaid
+---
+title: Workflow Ecosystem Management State Flow
+---
+stateDiagram-v2
+    [*] --> WorkflowImport
+    WorkflowImport --> GitHubSyncActive
+    WorkflowImport --> ProjectAnalysisReady
+    WorkflowImport --> FileManagementReady
+    WorkflowImport --> CleanupUtilitiesReady
+
+    GitHubSyncActive --> WeeklySync
+    WeeklySync --> ConflictResolution
+    ConflictResolution --> BackupComplete
+
+    ProjectAnalysisReady --> TreeGeneration
+    TreeGeneration --> ContextBuilding
+    ContextBuilding --> TreeRetrieval
+
+    FileManagementReady --> ArchiveCreation
+    ArchiveCreation --> ArchiveDistribution
+
+    CleanupUtilitiesReady --> ArchivedWorkflowDeletion
+
+    BackupComplete --> [*]
+    TreeRetrieval --> [*]
+    ArchiveDistribution --> [*]
+    ArchivedWorkflowDeletion --> [*]
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows how the different workflow categories interact within the ecosystem.
+
+```mermaid
+---
+title: Workflow Ecosystem Interaction Flow
+---
+flowchart TD
+    A["Workflow Import System"] --> B["GitHub Sync Workflows"]
+    A --> C["Project Analysis Workflows"]
+    A --> D["File Management Workflows"]
+    A --> E["Cleanup Workflows"]
+
+    B --> F["github_repo_workflows_sync"]
+    B --> G["github_workflows_backup"]
+
+    C --> H["gtree_creator"]
+    C --> I["gtree_build_context"]
+    C --> J["gtree_get"]
+
+    D --> K["zip_make"]
+    D --> L["zip_send"]
+
+    E --> M["delete_archived_workflows"]
+
+    F --> N["Weekly Automation"]
+    G --> O["Backup Operations"]
+    H --> P["Repository Analysis"]
+    I --> P
+    J --> P
+    K --> Q["File Distribution"]
+    L --> Q
+    M --> R["System Maintenance"]
+
+    N --> S["Continuous Sync"]
+    O --> S
+    P --> T["Project Documentation"]
+    Q --> U["File Operations"]
+    R --> V["Clean Environment"]
+```
+
+**Data Entity Relationship: Data structure for entities in Feature**
+
+This diagram shows the relationships between different workflow categories and their data dependencies.
+
+```mermaid
+---
+title: Workflow Ecosystem Data Entity Relationships
+---
+erDiagram
+    WORKFLOW_ECOSYSTEM ||--o{ GITHUB_WORKFLOWS : contains
+    WORKFLOW_ECOSYSTEM ||--o{ PROJECT_WORKFLOWS : contains
+    WORKFLOW_ECOSYSTEM ||--o{ FILE_WORKFLOWS : contains
+    WORKFLOW_ECOSYSTEM ||--o{ CLEANUP_WORKFLOWS : contains
+
+    GITHUB_WORKFLOWS ||--|| REPO_SYNC : includes
+    GITHUB_WORKFLOWS ||--|| BACKUP_AUTOMATION : includes
+
+    PROJECT_WORKFLOWS ||--|| TREE_CREATOR : includes
+    PROJECT_WORKFLOWS ||--|| CONTEXT_BUILDER : includes
+    PROJECT_WORKFLOWS ||--|| TREE_RETRIEVER : includes
+
+    FILE_WORKFLOWS ||--|| ZIP_CREATOR : includes
+    FILE_WORKFLOWS ||--|| ZIP_DISTRIBUTOR : includes
+
+    CLEANUP_WORKFLOWS ||--|| ARCHIVE_CLEANER : includes
+
+    REPO_SYNC {
+        string status "Active"
+        string schedule "Weekly"
+        string purpose "Bidirectional sync"
+    }
+
+    TREE_CREATOR {
+        string status "Inactive"
+        string trigger "Manual"
+        string purpose "Git tree generation"
+    }
+
+    ZIP_CREATOR {
+        string status "Inactive"
+        string trigger "Manual"
+        string purpose "Archive creation"
+    }
+
+    ARCHIVE_CLEANER {
+        string status "Inactive"
+        string trigger "Manual"
+        string purpose "Workflow cleanup"
+    }
 ```
