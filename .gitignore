@@ -198,4 +198,4 @@ cython_debug/
 .cursorindexingignore
 
 # Other
-.docss
+.docs
