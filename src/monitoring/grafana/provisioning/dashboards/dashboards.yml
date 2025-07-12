@@ -1,0 +1,16 @@
+# Grafana Dashboard Provisioning for n8n Docker Stack
+# This configuration automatically loads dashboards from the dashboards directory
+
+apiVersion: 1
+
+providers:
+  # Dashboard provider for n8n stack monitoring
+  - name: 'n8n-stack-dashboards'
+    orgId: 1
+    folder: 'n8n Stack Monitoring'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards

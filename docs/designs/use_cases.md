@@ -8,8 +8,9 @@ Note: This use_case.md is specific to the n8n Docker Stack implementation. Each 
 - src/n8n/src/scripts/ - Workflow import automation scripts
 - src/n8n/src/workflows/ - Pre-configured workflow JSON definitions
 - src/n8n/src/localfiles/ - File operations directory with FastAPI example server
+- src/monitoring/ - Comprehensive monitoring stack with Prometheus, Grafana, and AlertManager
 
-This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, and AI integration capabilities.
+This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, AI integration capabilities, and comprehensive monitoring and observability stack.
 
 ## USE-CASE: Automated Workflow Platform Deployment
 
@@ -515,5 +516,186 @@ erDiagram
         string status "Inactive"
         string trigger "Manual"
         string purpose "Workflow cleanup"
+    }
+```
+
+## USE-CASE: Comprehensive Monitoring and Observability
+
+**Feature 1: Complete Stack Monitoring with Prometheus, Grafana, and AlertManager**
+
+|| definition |
+|--|--|
+| GIVEN | The n8n Docker stack is running with monitoring services deployed |
+| WHEN | Users access Grafana dashboards and Prometheus metrics |
+| THEN | Complete observability is provided for all services including n8n, PostgreSQL, Ollama, and system resources |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the monitoring stack initialization and data collection process.
+
+```mermaid
+---
+title: Monitoring Stack State Flow
+---
+stateDiagram-v2
+    [*] --> MonitoringStart
+    MonitoringStart --> PrometheusInit
+    PrometheusInit --> MetricsCollection
+    MetricsCollection --> GrafanaInit
+    GrafanaInit --> DashboardProvisioning
+    DashboardProvisioning --> AlertManagerInit
+    AlertManagerInit --> AlertRulesLoaded
+    AlertRulesLoaded --> MonitoringReady
+    MonitoringReady --> ContinuousMonitoring
+    ContinuousMonitoring --> AlertEvaluation
+    AlertEvaluation --> AlertTriggered
+    AlertEvaluation --> NormalOperation
+    AlertTriggered --> NotificationSent
+    NotificationSent --> ContinuousMonitoring
+    NormalOperation --> ContinuousMonitoring
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows the interaction between monitoring components and monitored services.
+
+```mermaid
+---
+title: Monitoring System Interaction Flow
+---
+flowchart TD
+    A["Monitoring Stack Start"] --> B["Prometheus Service"]
+    B --> C["Metrics Scraping"]
+    C --> D["n8n Metrics :5678/metrics"]
+    C --> E["PostgreSQL Exporter :9187"]
+    C --> F["Node Exporter :9100"]
+    C --> G["cAdvisor :8080"]
+    C --> H["Ollama Metrics :11434/metrics"]
+
+    D --> I["Application Metrics"]
+    E --> J["Database Metrics"]
+    F --> K["System Metrics"]
+    G --> L["Container Metrics"]
+    H --> M["AI Service Metrics"]
+
+    I --> N["Prometheus Storage"]
+    J --> N
+    K --> N
+    L --> N
+    M --> N
+
+    N --> O["Grafana Dashboards"]
+    N --> P["AlertManager Rules"]
+
+    O --> Q["Visual Monitoring"]
+    P --> R["Alert Notifications"]
+
+    R --> S["Email/Webhook Alerts"]
+    Q --> T["Operational Insights"]
+```
+
+## USE-CASE: Real-time Performance Monitoring and Alerting
+
+**Feature 1: Automated Alert System with Multi-channel Notifications**
+
+|| definition |
+|--|--|
+| GIVEN | Monitoring stack is configured with alert rules for service health, resource usage, and database performance |
+| WHEN | System metrics exceed defined thresholds or services become unavailable |
+| THEN | Alerts are automatically triggered and routed to appropriate notification channels (email, webhooks, n8n workflows) |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the alert processing and notification workflow.
+
+```mermaid
+---
+title: Alert Processing State Flow
+---
+stateDiagram-v2
+    [*] --> MetricEvaluation
+    MetricEvaluation --> ThresholdCheck
+    ThresholdCheck --> WithinLimits
+    ThresholdCheck --> ThresholdExceeded
+    WithinLimits --> MetricEvaluation
+    ThresholdExceeded --> AlertGenerated
+    AlertGenerated --> AlertRouting
+    AlertRouting --> CriticalAlert
+    AlertRouting --> WarningAlert
+    AlertRouting --> DatabaseAlert
+    AlertRouting --> N8NAlert
+    CriticalAlert --> ImmediateNotification
+    WarningAlert --> GroupedNotification
+    DatabaseAlert --> DBANotification
+    N8NAlert --> WorkflowNotification
+    ImmediateNotification --> AlertSent
+    GroupedNotification --> AlertSent
+    DBANotification --> AlertSent
+    WorkflowNotification --> AlertSent
+    AlertSent --> AlertResolution
+    AlertResolution --> MetricEvaluation
+```
+
+## USE-CASE: Historical Data Analysis and Capacity Planning
+
+**Feature 1: Long-term Metrics Storage and Trend Analysis**
+
+|| definition |
+|--|--|
+| GIVEN | Prometheus is configured with 30-day data retention and Grafana dashboards show historical trends |
+| WHEN | Administrators need to analyze system performance over time or plan for capacity changes |
+| THEN | Historical metrics data is available for trend analysis, capacity planning, and performance optimization |
+
+**Data Entity Relationship: Data structure for entities in Feature**
+
+This diagram shows the relationships between monitoring components and their data storage.
+
+```mermaid
+---
+title: Monitoring Data Entity Relationships
+---
+erDiagram
+    MONITORING_STACK ||--o{ PROMETHEUS : includes
+    MONITORING_STACK ||--o{ GRAFANA : includes
+    MONITORING_STACK ||--o{ ALERTMANAGER : includes
+    MONITORING_STACK ||--o{ EXPORTERS : includes
+
+    PROMETHEUS ||--o{ METRICS_STORAGE : manages
+    PROMETHEUS ||--o{ SCRAPE_TARGETS : monitors
+    PROMETHEUS ||--o{ ALERT_RULES : evaluates
+
+    SCRAPE_TARGETS ||--|| N8N_SERVICE : includes
+    SCRAPE_TARGETS ||--|| POSTGRESQL_EXPORTER : includes
+    SCRAPE_TARGETS ||--|| NODE_EXPORTER : includes
+    SCRAPE_TARGETS ||--|| CADVISOR : includes
+    SCRAPE_TARGETS ||--|| OLLAMA_SERVICE : includes
+
+    GRAFANA ||--o{ DASHBOARDS : provides
+    GRAFANA ||--|| PROMETHEUS : "queries"
+    DASHBOARDS ||--|| N8N_OVERVIEW : includes
+    DASHBOARDS ||--|| SYSTEM_OVERVIEW : includes
+
+    ALERTMANAGER ||--o{ NOTIFICATION_CHANNELS : manages
+    ALERTMANAGER ||--|| PROMETHEUS : "receives alerts from"
+    NOTIFICATION_CHANNELS ||--|| EMAIL_ALERTS : includes
+    NOTIFICATION_CHANNELS ||--|| WEBHOOK_ALERTS : includes
+    NOTIFICATION_CHANNELS ||--|| N8N_WEBHOOKS : includes
+
+    EXPORTERS ||--|| POSTGRES_EXPORTER : includes
+    EXPORTERS ||--|| NODE_EXPORTER : includes
+    EXPORTERS ||--|| CADVISOR : includes
+
+    METRICS_STORAGE {
+        string retention "30 days"
+        string format "time-series"
+        string compression "enabled"
+    }
+
+    ALERT_RULES {
+        string service_health "critical"
+        string cpu_usage "warning > 80%"
+        string memory_usage "warning > 85%"
+        string disk_space "critical > 90%"
+        string database_connections "warning > 80%"
     }
 ```

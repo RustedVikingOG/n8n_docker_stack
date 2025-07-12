@@ -10,10 +10,15 @@ This document contains the architectural design of the n8n Docker Stack solution
 - src/n8n/src/scripts/import-workflows.sh - Intelligent workflow import script with duplicate detection
 - src/n8n/src/workflows/ - Pre-configured workflow JSON definitions automatically imported on startup
 - src/n8n/src/localfiles/ - File operations directory mounted to n8n container with FastAPI example server
+- src/monitoring/ - Comprehensive monitoring stack with Prometheus, Grafana, and AlertManager
+- src/monitoring/docker-compose.monitoring.yml - Monitoring services orchestration with metrics collection and alerting
+- src/monitoring/prometheus/ - Prometheus configuration with alert rules and service discovery
+- src/monitoring/grafana/ - Grafana dashboards and provisioning configuration for visualization
+- src/monitoring/alertmanager/ - AlertManager configuration for intelligent alert routing and notifications
 - docs/designs/ - Architecture and use case documentation following AI template standards
 - docs/1.COLLABORATION.md - Comprehensive collaboration guide with setup and debugging instructions
 
-This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, and comprehensive documentation following established AI template standards.
+This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, comprehensive monitoring and observability stack, and extensive documentation following established AI template standards.
 
 ## System Overview Architecture
 
@@ -29,24 +34,44 @@ flowchart TD
     A --> D["n8n Automation Platform"]
     A --> E["Ollama AI Service"]
     A --> F["FastAPI Example Server"]
+    A --> G["Monitoring Stack"]
 
-    B --> G["Health Check System"]
-    G --> H["Service Dependencies"]
+    B --> H["Health Check System"]
+    H --> I["Service Dependencies"]
 
-    C --> I["Workflow JSON Processing"]
-    I --> J["Duplicate Detection Logic"]
-    J --> K["n8n CLI Integration"]
+    C --> J["Workflow JSON Processing"]
+    J --> K["Duplicate Detection Logic"]
+    K --> L["n8n CLI Integration"]
 
-    D --> L["Web Interface :5678"]
-    D --> M["Workflow Execution Engine"]
-    D --> N["API Endpoints"]
-    D --> O["File System Operations"]
+    D --> M["Web Interface :5678"]
+    D --> N["Workflow Execution Engine"]
+    D --> O["API Endpoints"]
+    D --> P["File System Operations"]
 
-    E --> P["AI Model Serving :11434"]
-    P --> Q["llama3.2:3b Model"]
+    E --> Q["AI Model Serving :11434"]
+    Q --> R["llama3.2:3b Model"]
 
-    F --> R["Development API :8010"]
-    R --> S["HTTP Testing Endpoints"]
+    F --> S["Development API :8010"]
+    S --> T["HTTP Testing Endpoints"]
+
+    G --> U["Prometheus :9090"]
+    G --> V["Grafana :3000"]
+    G --> W["AlertManager :9093"]
+    G --> X["Node Exporter :9100"]
+    G --> Y["cAdvisor :8080"]
+    G --> Z["PostgreSQL Exporter :9187"]
+
+    U --> AA["Metrics Collection"]
+    AA --> AB["Service Discovery"]
+    AB --> AC["Alert Rules Engine"]
+
+    V --> AD["Dashboard Provisioning"]
+    AD --> AE["Data Visualization"]
+    AE --> AF["User Interface"]
+
+    W --> AG["Alert Routing"]
+    AG --> AH["Notification Delivery"]
+    AH --> AI["Alert Grouping"]
 
     H --> C
     H --> D

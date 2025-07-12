@@ -11,6 +11,11 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    labels:
+      - "prometheus.io/scrape=false"
+      - "monitoring.service=postgres"
+    networks:
+      - default
 
   workflow-importer:
     build: .
@@ -26,6 +31,8 @@ services:
         condition: service_healthy
     entrypoint: ["sh", "-c"]
     command: ["/scripts/import-workflows.sh"]
+    networks:
+      - default
 
   n8n:
     build: .
@@ -43,6 +50,12 @@ services:
         condition: service_healthy
       workflow-importer:
         condition: service_completed_successfully
+    labels:
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=5678"
+      - "prometheus.io/path=/metrics"
+    networks:
+      - default
 
   ollama:
     image: ollama/ollama
@@ -56,6 +69,18 @@ services:
       resources:
         limits:
           memory: 4G
+    labels:
+      - "prometheus.io/scrape=true"
+      - "prometheus.io/port=11434"
+      - "prometheus.io/path=/metrics"
+    networks:
+      - default
+
+# Networks
+networks:
+  default:
+    name: n8n_src_default
+    driver: bridge
 
 volumes:
   postgres_data:
