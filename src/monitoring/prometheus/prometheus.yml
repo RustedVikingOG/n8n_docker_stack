@@ -28,15 +28,6 @@ scrape_configs:
     scrape_interval: 5s
     metrics_path: /metrics
 
-  # n8n application metrics (experimental - may not be available)
-  - job_name: 'n8n'
-    static_configs:
-      - targets: ['n8n:5678']
-    scrape_interval: 30s
-    metrics_path: /metrics
-    scrape_timeout: 10s
-    # n8n metrics endpoint - may not be available in all versions
-
   # PostgreSQL database metrics via postgres_exporter
   - job_name: 'postgres'
     static_configs:
@@ -57,15 +48,6 @@ scrape_configs:
       - targets: ['cadvisor:8080']
     scrape_interval: 15s
     metrics_path: /metrics
-
-  # Ollama AI service metrics (if available)
-  - job_name: 'ollama'
-    static_configs:
-      - targets: ['ollama:11434']
-    scrape_interval: 30s
-    metrics_path: /metrics
-    scrape_timeout: 10s
-    # Ollama may not expose Prometheus metrics, this is experimental
 
   # AlertManager metrics
   - job_name: 'alertmanager'

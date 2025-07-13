@@ -4,24 +4,15 @@
 groups:
   - name: n8n_stack_alerts
     rules:
-      # Service Health Alerts
+      # Service Health Alerts (excluding services without metrics endpoints)
       - alert: ServiceDown
-        expr: up == 0
+        expr: up{job!~"n8n|ollama"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: "Service {{ $labels.job }} is down"
           description: "Service {{ $labels.job }} on instance {{ $labels.instance }} has been down for more than 1 minute. Please check the service status immediately."
-
-      - alert: N8NServiceDown
-        expr: up{job="n8n"} == 0
-        for: 30s
-        labels:
-          severity: critical
-        annotations:
-          summary: "n8n automation platform is down"
-          description: "The n8n automation platform is not responding on instance {{ $labels.instance }}. Workflows may be interrupted."
 
       - alert: PostgreSQLDown
         expr: up{job="postgres"} == 0
@@ -42,7 +33,7 @@ groups:
           severity: warning
         annotations:
           summary: "High CPU usage detected"
-          description: "CPU usage is above 80% on instance {{ $labels.instance }} for more than 5 minutes. Current usage: {{ $value | humanizePercentage }}."
+          description: "CPU usage is above 80% on instance {{ $labels.instance }} for more than 5 minutes. Current usage: {{ printf \"%.1f\" $value }}%."
 
       - alert: HighMemoryUsage
         expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
@@ -51,7 +42,7 @@ groups:
           severity: warning
         annotations:
           summary: "High memory usage detected"
-          description: "Memory usage is above 85% on instance {{ $labels.instance }} for more than 5 minutes. Current usage: {{ $value | humanizePercentage }}."
+          description: "Memory usage is above 85% on instance {{ $labels.instance }} for more than 5 minutes. Current usage: {{ printf \"%.1f\" $value }}%."
 
       - alert: LowDiskSpace
         expr: (1 - (node_filesystem_avail_bytes{fstype!="tmpfs"} / node_filesystem_size_bytes{fstype!="tmpfs"})) * 100 > 90
@@ -60,7 +51,7 @@ groups:
           severity: critical
         annotations:
           summary: "Low disk space detected"
-          description: "Disk usage is above 90% on instance {{ $labels.instance }} at mount point {{ $labels.mountpoint }}. Current usage: {{ $value | humanizePercentage }}."
+          description: "Disk usage is above 90% on instance {{ $labels.instance }} at mount point {{ $labels.mountpoint }}. Current usage: {{ printf \"%.1f\" $value }}%."
 
   - name: database_alerts
     rules:
@@ -73,15 +64,6 @@ groups:
         annotations:
           summary: "PostgreSQL too many connections"
           description: "PostgreSQL has more than 80% of max connections in use."
-
-      - alert: PostgreSQLSlowQueries
-        expr: rate(pg_stat_database_tup_returned[5m]) / rate(pg_stat_database_tup_fetched[5m]) < 0.1
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "PostgreSQL slow queries detected"
-          description: "PostgreSQL query performance is degraded."
 
   - name: container_alerts
     rules:
@@ -103,12 +85,3 @@ groups:
         annotations:
           summary: "Container high memory usage"
           description: "Container {{ $labels.name }} is using more than 90% of its memory limit."
-
-      - alert: ContainerRestarting
-        expr: rate(container_last_seen[5m]) > 0
-        for: 1m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Container restarting"
-          description: "Container {{ $labels.name }} has restarted recently."
