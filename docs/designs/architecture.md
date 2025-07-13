@@ -301,3 +301,330 @@ flowchart TD
     F --> P["Optional Query Parameters"]
     P --> Q["JSON Response Format"]
 ```
+
+**Monitoring Stack Architecture**
+
+The comprehensive monitoring and observability platform that provides complete visibility into the n8n Docker stack performance, health, and resource usage. This component ensures operational excellence through metrics collection, visualization, and intelligent alerting.
+
+**Core Functionality: Monitoring Stack Architecture**
+
+- **Metrics Collection**: Prometheus scrapes metrics from all services including n8n, PostgreSQL, system resources, and containers with 30-day retention
+- **Visualization Platform**: Grafana provides pre-configured dashboards for n8n overview, system monitoring, and database performance with automatic provisioning
+- **Intelligent Alerting**: AlertManager routes alerts based on configurable rules for service health, resource thresholds, and database performance
+- **Multi-Service Monitoring**: Comprehensive observability across n8n application, PostgreSQL database, Ollama AI service, system resources, and container metrics
+- **Integration Ready**: Webhook support for sending alerts back to n8n workflows and external notification systems
+
+**Architecture Diagram of component: Monitoring Stack Architecture**
+
+```mermaid
+---
+title: Comprehensive Monitoring Stack Architecture
+---
+flowchart TD
+    A["Monitoring Stack Deployment"] --> B["Prometheus Service :9090"]
+    A --> C["Grafana Service :3000"]
+    A --> D["AlertManager Service :9093"]
+    A --> E["Exporters Collection"]
+    
+    B --> F["Metrics Storage"]
+    B --> G["Scrape Configuration"]
+    B --> H["Alert Rules Engine"]
+    
+    G --> I["n8n Service :5678/metrics"]
+    G --> J["PostgreSQL Exporter :9187"]
+    G --> K["Node Exporter :9100"]
+    G --> L["cAdvisor :8080"]
+    G --> M["Ollama Service :11434/metrics"]
+    
+    C --> N["Dashboard Provisioning"]
+    C --> O["Data Source Configuration"]
+    C --> P["User Interface"]
+    
+    N --> Q["n8n Overview Dashboard"]
+    N --> R["System Overview Dashboard"]
+    N --> S["Database Performance Dashboard"]
+    
+    D --> T["Alert Routing"]
+    D --> U["Notification Channels"]
+    D --> V["Alert Grouping"]
+    
+    U --> W["Email Notifications"]
+    U --> X["Webhook Integrations"]
+    U --> Y["n8n Workflow Triggers"]
+    
+    E --> J
+    E --> K
+    E --> L
+    
+    H --> D
+    F --> C
+    
+    I --> Z["Application Metrics"]
+    J --> AA["Database Metrics"]
+    K --> BB["System Metrics"]
+    L --> CC["Container Metrics"]
+    M --> DD["AI Service Metrics"]
+    
+    Z --> F
+    AA --> F
+    BB --> F
+    CC --> F
+    DD --> F
+    
+    P --> EE["admin/admin_password"]
+    T --> FF["Alert Severity Routing"]
+    V --> GG["Alert Deduplication"]
+```
+
+**Prometheus Metrics Collection Service**
+
+A time-series database and monitoring system that collects, stores, and processes metrics from all components of the n8n Docker stack. This component serves as the central metrics repository with intelligent scraping and alert rule evaluation.
+
+**Core Functionality: Prometheus Metrics Collection Service**
+
+- **Service Discovery**: Automatically discovers and monitors all configured services including n8n, PostgreSQL, system resources, and containers
+- **Metrics Storage**: Stores time-series data with 30-day retention period and efficient compression for optimal performance
+- **Alert Processing**: Evaluates alert rules for service health, resource usage thresholds, and database performance metrics
+- **API Interface**: Provides REST API endpoints for metrics queries, configuration management, and status monitoring
+
+**Architecture Diagram of component: Prometheus Metrics Collection Service**
+
+```mermaid
+---
+title: Prometheus Metrics Collection Architecture
+---
+flowchart TD
+    A["Prometheus Container :9090"] --> B["Configuration Management"]
+    A --> C["Metrics Storage Engine"]
+    A --> D["Scrape Target Manager"]
+    A --> E["Alert Rules Processor"]
+    
+    B --> F["prometheus.yml Configuration"]
+    B --> G["alert_rules.yml Rules"]
+    
+    D --> H["n8n Application Scraping"]
+    D --> I["PostgreSQL Exporter Scraping"]
+    D --> J["Node Exporter Scraping"]
+    D --> K["cAdvisor Scraping"]
+    D --> L["Ollama Service Scraping"]
+    
+    H --> M["Workflow Execution Metrics"]
+    H --> N["API Response Times"]
+    H --> O["Service Health Status"]
+    
+    I --> P["Database Connection Metrics"]
+    I --> Q["Query Performance Data"]
+    I --> R["Database Size Statistics"]
+    
+    J --> S["CPU Usage Metrics"]
+    J --> T["Memory Utilization Data"]
+    J --> U["Disk Space Statistics"]
+    J --> V["Network Traffic Metrics"]
+    
+    K --> W["Container Resource Usage"]
+    K --> X["Container Health Status"]
+    K --> Y["Container Restart Counts"]
+    
+    L --> Z["AI Model Response Times"]
+    L --> AA["AI Service Availability"]
+    
+    C --> BB["Time Series Database"]
+    BB --> CC["30-Day Retention"]
+    BB --> DD["Data Compression"]
+    
+    E --> EE["Service Health Alerts"]
+    E --> FF["Resource Threshold Alerts"]
+    E --> GG["Database Performance Alerts"]
+    
+    EE --> HH["AlertManager Integration"]
+    FF --> HH
+    GG --> HH
+```
+
+**Grafana Visualization Platform**
+
+A comprehensive dashboard and visualization platform that transforms Prometheus metrics into actionable insights through pre-configured dashboards, real-time monitoring, and user-friendly interfaces for the n8n Docker stack.
+
+**Core Functionality: Grafana Visualization Platform**
+
+- **Dashboard Provisioning**: Automatically provisions pre-configured dashboards for n8n overview, system monitoring, and database performance
+- **Data Source Integration**: Seamlessly connects to Prometheus for real-time metrics visualization and historical trend analysis
+- **User Interface**: Provides web-based interface (admin/admin_password) for dashboard viewing, customization, and alert management
+- **Alert Visualization**: Displays alert status, historical alert data, and alert rule configurations for operational awareness
+
+**Architecture Diagram of component: Grafana Visualization Platform**
+
+```mermaid
+---
+title: Grafana Visualization Platform Architecture
+---
+flowchart TD
+    A["Grafana Container :3000"] --> B["Authentication System"]
+    A --> C["Dashboard Manager"]
+    A --> D["Data Source Connector"]
+    A --> E["Provisioning Engine"]
+    
+    B --> F["Local Admin Authentication"]
+    F --> G["admin/admin_password"]
+    
+    C --> H["Pre-configured Dashboards"]
+    H --> I["n8n Stack Overview"]
+    H --> J["System Resources Overview"]
+    H --> K["Database Performance"]
+    
+    D --> L["Prometheus Data Source"]
+    L --> M["Metrics Query Engine"]
+    M --> N["Real-time Data Updates"]
+    
+    E --> O["Automatic Dashboard Provisioning"]
+    E --> P["Data Source Provisioning"]
+    
+    O --> Q["dashboards.yml Configuration"]
+    P --> R["prometheus.yml Data Source"]
+    
+    I --> S["Workflow Execution Panels"]
+    I --> T["Service Health Panels"]
+    I --> U["API Performance Panels"]
+    
+    J --> V["CPU Utilization Graphs"]
+    J --> W["Memory Usage Graphs"]
+    J --> X["Disk Space Monitoring"]
+    J --> Y["Network Traffic Graphs"]
+    
+    K --> Z["Connection Pool Status"]
+    K --> AA["Query Performance Metrics"]
+    K --> BB["Database Size Trends"]
+    
+    A --> CC["Persistent Volume Storage"]
+    CC --> DD["grafana_data Volume"]
+    DD --> EE["Dashboard Configurations"]
+    DD --> FF["User Settings"]
+    DD --> GG["Alert Configurations"]
+```
+
+**AlertManager Notification System**
+
+An intelligent alert routing and notification management system that processes alerts from Prometheus and delivers notifications through multiple channels including email, webhooks, and n8n workflow integrations.
+
+**Core Functionality: AlertManager Notification System**
+
+- **Alert Routing**: Routes alerts based on severity, service type, and custom labels to appropriate notification channels
+- **Notification Delivery**: Supports multiple notification channels including email, webhooks, and direct n8n workflow triggers
+- **Alert Grouping**: Groups related alerts to prevent notification spam and provides consolidated alert summaries
+- **Integration Ready**: Webhook endpoints configured for sending alerts back to n8n workflows for automated response procedures
+
+**Architecture Diagram of component: AlertManager Notification System**
+
+```mermaid
+---
+title: AlertManager Notification System Architecture
+---
+flowchart TD
+    A["AlertManager Container :9093"] --> B["Alert Reception"]
+    A --> C["Routing Engine"]
+    A --> D["Notification Manager"]
+    A --> E["Alert Grouping"]
+    
+    B --> F["Prometheus Alert Ingestion"]
+    F --> G["Alert Validation"]
+    G --> H["Alert Processing Queue"]
+    
+    C --> I["Routing Rules"]
+    I --> J["Severity-based Routing"]
+    I --> K["Service-type Routing"]
+    I --> L["Label-based Routing"]
+    
+    D --> M["Email Notifications"]
+    D --> N["Webhook Notifications"]
+    D --> O["n8n Workflow Triggers"]
+    
+    E --> P["Alert Deduplication"]
+    E --> Q["Alert Consolidation"]
+    E --> R["Time-based Grouping"]
+    
+    M --> S["SMTP Configuration"]
+    S --> T["Critical Alert Emails"]
+    S --> U["Warning Alert Summaries"]
+    
+    N --> V["HTTP Webhook Endpoints"]
+    V --> W["External System Integration"]
+    V --> X["Custom Alert Handlers"]
+    
+    O --> Y["n8n Webhook Endpoints"]
+    Y --> Z["Automated Response Workflows"]
+    Y --> AA["Alert Processing Workflows"]
+    
+    A --> BB["Configuration Management"]
+    BB --> CC["alertmanager.yml"]
+    CC --> DD["Routing Configuration"]
+    CC --> EE["Notification Templates"]
+    CC --> FF["Grouping Rules"]
+```
+
+**Exporter Services Collection**
+
+A comprehensive collection of specialized metric exporters that gather detailed performance and health data from system resources, containers, and database services for complete observability of the n8n Docker stack infrastructure.
+
+**Core Functionality: Exporter Services Collection**
+
+- **System Monitoring**: Node Exporter collects comprehensive system metrics including CPU, memory, disk, and network statistics
+- **Container Monitoring**: cAdvisor provides detailed container resource usage, health status, and performance metrics
+- **Database Monitoring**: PostgreSQL Exporter gathers database-specific metrics including connections, queries, and performance data
+- **Service Integration**: All exporters expose metrics in Prometheus format for seamless integration with the monitoring stack
+
+**Architecture Diagram of component: Exporter Services Collection**
+
+```mermaid
+---
+title: Exporter Services Collection Architecture
+---
+flowchart TD
+    A["Exporter Services"] --> B["Node Exporter :9100"]
+    A --> C["cAdvisor :8080"]
+    A --> D["PostgreSQL Exporter :9187"]
+    
+    B --> E["System Metrics Collection"]
+    E --> F["CPU Usage Statistics"]
+    E --> G["Memory Utilization Data"]
+    E --> H["Disk Space Monitoring"]
+    E --> I["Network Interface Statistics"]
+    E --> J["System Load Averages"]
+    
+    C --> K["Container Metrics Collection"]
+    K --> L["Container Resource Usage"]
+    K --> M["Container Health Status"]
+    K --> N["Container Restart Counts"]
+    K --> O["Container Performance Data"]
+    
+    D --> P["Database Metrics Collection"]
+    P --> Q["Connection Pool Status"]
+    P --> R["Active Query Statistics"]
+    P --> S["Database Size Metrics"]
+    P --> T["Replication Status"]
+    P --> U["Lock Statistics"]
+    
+    F --> V["Prometheus Metrics Format"]
+    G --> V
+    H --> V
+    I --> V
+    J --> V
+    
+    L --> W["Prometheus Metrics Format"]
+    M --> W
+    N --> W
+    O --> W
+    
+    Q --> X["Prometheus Metrics Format"]
+    R --> X
+    S --> X
+    T --> X
+    U --> X
+    
+    V --> Y["Prometheus Scraping"]
+    W --> Y
+    X --> Y
+    
+    Y --> Z["Metrics Storage"]
+    Z --> AA["Grafana Visualization"]
+    Z --> BB["Alert Processing"]
+```
