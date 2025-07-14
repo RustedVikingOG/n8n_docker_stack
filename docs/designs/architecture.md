@@ -10,15 +10,23 @@ This document contains the architectural design of the n8n Docker Stack solution
 - src/n8n/src/scripts/import-workflows.sh - Intelligent workflow import script with duplicate detection
 - src/n8n/src/workflows/ - Pre-configured workflow JSON definitions automatically imported on startup
 - src/n8n/src/localfiles/ - File operations directory mounted to n8n container with FastAPI example server
+- src/security/ - **NEW** Security hardening stack with nginx reverse proxy, SSL/TLS, secrets management, and intrusion prevention
+- src/security/docker-compose.security.yml - **NEW** Security-enhanced Docker orchestration with nginx, fail2ban, and network isolation
+- src/security/nginx/ - **NEW** Nginx reverse proxy configuration with SSL termination and security headers
+- src/security/secrets/ - **NEW** Docker secrets management for secure credential storage
+- src/security/fail2ban/ - **NEW** Intrusion prevention system configuration
+- src/backup-restore/ - **NEW** Automated backup and disaster recovery system
+- src/backup-restore/automated-backups/ - **NEW** Automated backup scripts with integrity verification
+- src/backup-restore/restore-scripts/ - **NEW** Comprehensive restore procedures and scripts
 - src/monitoring/ - Comprehensive monitoring stack with Prometheus, Grafana, and AlertManager
-- src/monitoring/docker-compose.monitoring.yml - Monitoring services orchestration with metrics collection and alerting
+- src/monitoring/docker-compose.monitoring.yml - Multi-service monitoring orchestration (Prometheus, Grafana, AlertManager, exporters)
 - src/monitoring/prometheus/ - Prometheus configuration with alert rules and service discovery
 - src/monitoring/grafana/ - Grafana dashboards and provisioning configuration for visualization
 - src/monitoring/alertmanager/ - AlertManager configuration for intelligent alert routing and notifications
 - docs/designs/ - Architecture and use case documentation following AI template standards
 - docs/1.COLLABORATION.md - Comprehensive collaboration guide with setup and debugging instructions
 
-This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, comprehensive monitoring and observability stack, and extensive documentation following established AI template standards.
+This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, **comprehensive security hardening with HTTPS/TLS termination, secrets management, network isolation, intrusion prevention, and automated backup systems**, comprehensive monitoring and observability stack, and extensive documentation following established AI template standards.
 
 ## System Overview Architecture
 
