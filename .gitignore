@@ -197,5 +197,12 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# SSL Certificates and Security Files
+*.crt
+*.key
+*.pem
+src/security/nginx/ssl/
+src/security/secrets/*.txt
+
 # Other
 .docs
