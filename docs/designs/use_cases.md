@@ -1577,3 +1577,347 @@ erDiagram
         timestamp last_validated
     }
 ```
+
+## USE-CASE: Comprehensive Testing Infrastructure and Validation Pipeline
+
+**Feature 1: Automated Testing Pipeline with Multi-level Validation**
+
+|| definition |
+|--|--|
+| GIVEN | Testing infrastructure is available with test-monitoring.sh, verify-integration.sh, and start-monitoring.sh scripts |
+| WHEN | Developers or operators need to validate monitoring stack functionality, deployment readiness, and integration completeness |
+| THEN | Comprehensive automated testing provides detailed validation reports with pass/fail status for all components, services, and integrations |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the comprehensive testing pipeline flow from initialization to completion.
+
+```mermaid
+---
+title: Testing Infrastructure Validation State Flow
+---
+stateDiagram-v2
+    [*] --> TestInitialization
+    TestInitialization --> DependencyCheck
+    DependencyCheck --> ContainerValidation
+    ContainerValidation --> ServiceHealthValidation
+    ServiceHealthValidation --> NetworkConnectivityTests
+    NetworkConnectivityTests --> MetricsCollectionValidation
+    MetricsCollectionValidation --> DashboardFunctionalityTests
+    DashboardFunctionalityTests --> AlertSystemValidation
+    AlertSystemValidation --> IntegrationCompleteness
+    IntegrationCompleteness --> ConfigurationValidation
+    ConfigurationValidation --> DocumentationVerification
+    DocumentationVerification --> FunctionalTestExecution
+    FunctionalTestExecution --> TestResultsAggregation
+    TestResultsAggregation --> ValidationComplete
+    ValidationComplete --> TestReportGeneration
+    TestReportGeneration --> [*]
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows the interaction between testing scripts and system components during comprehensive validation.
+
+```mermaid
+---
+title: Testing Infrastructure Interaction Flow
+---
+flowchart TD
+    A["Test Script Execution"] --> B["Dependency Validation"]
+    B --> C["Docker Environment Check"]
+    C --> D["Container Status Verification"]
+    D --> E["Service Health API Calls"]
+    E --> F["Network Connectivity Tests"]
+    F --> G["Metrics Endpoint Validation"]
+    G --> H["Dashboard Functionality Tests"]
+    H --> I["Alert System Validation"]
+    I --> J["Integration Verification"]
+    J --> K["Configuration Completeness"]
+    K --> L["Documentation Validation"]
+    L --> M["Functional Test Execution"]
+    M --> N["Test Results Aggregation"]
+    N --> O["Report Generation"]
+    
+    B --> P["curl, jq, docker Availability"]
+    C --> Q["Docker Daemon Access"]
+    D --> R["Container Running Status"]
+    E --> S["Health Endpoint Responses"]
+    F --> T["Network Connectivity"]
+    G --> U["Metrics Endpoint Availability"]
+    H --> V["Grafana Dashboard Load"]
+    I --> W["AlertManager Configuration"]
+    J --> X["n8n Stack Integration"]
+    K --> Y["Config File Validation"]
+    L --> Z["Documentation Completeness"]
+    M --> AA["End-to-End Testing"]
+    
+    P --> BB["Pass/Fail Status"]
+    Q --> BB
+    R --> BB
+    S --> BB
+    T --> BB
+    U --> BB
+    V --> BB
+    W --> BB
+    X --> BB
+    Y --> BB
+    Z --> BB
+    AA --> BB
+    
+    BB --> CC["Test Summary Report"]
+    CC --> DD["Success/Failure Exit Code"]
+```
+
+**Data Entity Relationships: Data structures that relate to feature**
+
+```mermaid
+---
+title: Testing Infrastructure Data Entity Relationships
+---
+erDiagram
+    TEST_SUITE ||--o{ TEST_SCRIPTS : includes
+    TEST_SCRIPTS ||--o{ TEST_CATEGORIES : contains
+    TEST_CATEGORIES ||--o{ TEST_CASES : includes
+    TEST_CASES ||--o{ TEST_RESULTS : generates
+    
+    TEST_SCRIPTS ||--|| MONITORING_TEST : includes
+    TEST_SCRIPTS ||--|| INTEGRATION_TEST : includes
+    TEST_SCRIPTS ||--|| STARTUP_TEST : includes
+    
+    MONITORING_TEST ||--o{ CONTAINER_TESTS : executes
+    MONITORING_TEST ||--o{ HEALTH_TESTS : executes
+    MONITORING_TEST ||--o{ METRICS_TESTS : executes
+    MONITORING_TEST ||--o{ DASHBOARD_TESTS : executes
+    MONITORING_TEST ||--o{ ALERT_TESTS : executes
+    
+    INTEGRATION_TEST ||--o{ PLAN_VERIFICATION : executes
+    INTEGRATION_TEST ||--o{ CONFIG_VALIDATION : executes
+    INTEGRATION_TEST ||--o{ DOC_VERIFICATION : executes
+    INTEGRATION_TEST ||--o{ FUNCTIONAL_TESTS : executes
+    
+    STARTUP_TEST ||--o{ DEPENDENCY_CHECKS : executes
+    STARTUP_TEST ||--o{ SERVICE_STARTUP : executes
+    STARTUP_TEST ||--o{ HEALTH_VALIDATION : executes
+    STARTUP_TEST ||--o{ ACCESS_VERIFICATION : executes
+    
+    TEST_SUITE {
+        string suite_id
+        string suite_name
+        string description
+        timestamp execution_time
+        int total_tests
+        int passed_tests
+        int failed_tests
+        string status
+    }
+    
+    TEST_SCRIPTS {
+        string script_name
+        string script_path
+        string purpose
+        string requirements
+        json endpoints_tested
+        string execution_method
+    }
+    
+    TEST_RESULTS {
+        string result_id
+        string test_case_id
+        string status
+        string error_message
+        json result_data
+        float execution_duration
+        timestamp completion_time
+        string validation_details
+    }
+    
+    CONTAINER_TESTS {
+        string container_name
+        string expected_status
+        string actual_status
+        boolean running
+        string image_version
+    }
+    
+    HEALTH_TESTS {
+        string service_name
+        string endpoint_url
+        int expected_status_code
+        int actual_status_code
+        float response_time
+        string health_status
+    }
+    
+    METRICS_TESTS {
+        string exporter_name
+        string metrics_endpoint
+        boolean metrics_available
+        int metric_count
+        string metric_format
+    }
+```
+
+## USE-CASE: Security Configuration and Production Readiness
+
+**Feature 1: Security Hardening and Production Deployment Configuration**
+
+|| definition |
+|--|--|
+| GIVEN | The n8n Docker Stack is configured for development with default credentials and HTTP connections |
+| WHEN | Users need to deploy the stack in production environment with proper security measures |
+| THEN | Security configuration guide provides HTTPS setup, credential management, network isolation, and production-ready configuration options |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the security configuration and hardening process for production deployment.
+
+```mermaid
+---
+title: Security Configuration State Flow
+---
+stateDiagram-v2
+    [*] --> SecurityAssessment
+    SecurityAssessment --> CredentialConfiguration
+    CredentialConfiguration --> HTTPSConfiguration
+    HTTPSConfiguration --> NetworkSecuritySetup
+    NetworkSecuritySetup --> EnvironmentFileSecurement
+    EnvironmentFileSecurement --> AccessControlImplementation
+    AccessControlImplementation --> BackupStrategySetup
+    BackupStrategySetup --> SecurityValidation
+    SecurityValidation --> ProductionReadiness
+    ProductionReadiness --> [*]
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows the security configuration workflow for production deployment.
+
+```mermaid
+---
+title: Security Configuration Workflow
+---
+flowchart TD
+    A["Security Configuration Start"] --> B["Default Credential Assessment"]
+    B --> C["Generate Strong Passwords"]
+    C --> D["Update Environment Files"]
+    D --> E["HTTPS Certificate Setup"]
+    E --> F["Reverse Proxy Configuration"]
+    F --> G["Network Security Rules"]
+    G --> H["Firewall Configuration"]
+    H --> I["Volume Permissions Setup"]
+    I --> J["Database Security Hardening"]
+    J --> K["Monitoring Security Configuration"]
+    K --> L["Backup Strategy Implementation"]
+    L --> M["Security Validation Testing"]
+    M --> N["Production Deployment"]
+    
+    C --> O["n8n Admin Password"]
+    C --> P["PostgreSQL Password"]
+    C --> Q["Grafana Admin Password"]
+    C --> R["Encryption Keys"]
+    
+    E --> S["SSL/TLS Certificates"]
+    F --> T["nginx/Traefik Setup"]
+    G --> U["Docker Network Isolation"]
+    H --> V["Port Access Control"]
+    I --> W["File System Security"]
+    J --> X["Database Access Control"]
+    K --> Y["Monitoring Authentication"]
+    L --> Z["Automated Backup"]
+    
+    O --> AA["Environment Variable Update"]
+    P --> AA
+    Q --> AA
+    R --> AA
+    
+    S --> BB["HTTPS Enforcement"]
+    T --> BB
+    U --> CC["Network Security"]
+    V --> CC
+    W --> DD["Data Protection"]
+    X --> DD
+    Y --> EE["Monitoring Security"]
+    Z --> EE
+    
+    AA --> FF["Security Configuration Complete"]
+    BB --> FF
+    CC --> FF
+    DD --> FF
+    EE --> FF
+```
+
+**Data Entity Relationships: Data structures that relate to feature**
+
+```mermaid
+---
+title: Security Configuration Data Entity Relationships
+---
+erDiagram
+    SECURITY_CONFIG ||--o{ CREDENTIAL_MANAGEMENT : includes
+    SECURITY_CONFIG ||--o{ NETWORK_SECURITY : includes
+    SECURITY_CONFIG ||--o{ ACCESS_CONTROL : includes
+    SECURITY_CONFIG ||--o{ DATA_PROTECTION : includes
+    
+    CREDENTIAL_MANAGEMENT ||--o{ ENVIRONMENT_FILES : secures
+    CREDENTIAL_MANAGEMENT ||--o{ PASSWORD_POLICIES : enforces
+    CREDENTIAL_MANAGEMENT ||--o{ ENCRYPTION_KEYS : manages
+    
+    NETWORK_SECURITY ||--o{ HTTPS_CONFIG : implements
+    NETWORK_SECURITY ||--o{ FIREWALL_RULES : configures
+    NETWORK_SECURITY ||--o{ NETWORK_ISOLATION : provides
+    
+    ACCESS_CONTROL ||--o{ USER_AUTHENTICATION : manages
+    ACCESS_CONTROL ||--o{ SERVICE_AUTHORIZATION : controls
+    ACCESS_CONTROL ||--o{ API_SECURITY : implements
+    
+    DATA_PROTECTION ||--o{ BACKUP_STRATEGY : implements
+    DATA_PROTECTION ||--o{ VOLUME_SECURITY : configures
+    DATA_PROTECTION ||--o{ DATABASE_SECURITY : enforces
+    
+    SECURITY_CONFIG {
+        string config_id
+        string environment
+        timestamp created_date
+        string security_level
+        boolean https_enabled
+        boolean auth_configured
+        string compliance_status
+    }
+    
+    CREDENTIAL_MANAGEMENT {
+        string service_name
+        string credential_type
+        boolean default_changed
+        string strength_level
+        timestamp last_updated
+        string storage_method
+    }
+    
+    NETWORK_SECURITY {
+        string network_name
+        string isolation_level
+        json allowed_ports
+        json firewall_rules
+        boolean reverse_proxy_enabled
+        string ssl_certificate_status
+    }
+    
+    ACCESS_CONTROL {
+        string service_name
+        string auth_method
+        json user_roles
+        json api_permissions
+        boolean mfa_enabled
+        string session_management
+    }
+    
+    DATA_PROTECTION {
+        string protection_type
+        string backup_frequency
+        string encryption_status
+        json volume_permissions
+        string retention_policy
+        string disaster_recovery_plan
+    }
+```
