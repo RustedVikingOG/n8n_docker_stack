@@ -26,7 +26,7 @@ This document contains the architectural design of the n8n Docker Stack solution
 - docs/designs/ - Architecture and use case documentation following AI template standards
 - docs/1.COLLABORATION.md - Comprehensive collaboration guide with setup and debugging instructions
 
-This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, **comprehensive security hardening with HTTPS/TLS termination, secrets management, network isolation, intrusion prevention, and automated backup systems**, comprehensive monitoring and observability stack, and extensive documentation following established AI template standards.
+This project provides a complete Docker-based n8n workflow automation platform with PostgreSQL database, automatic workflow import, Ollama AI integration, **comprehensive security hardening with HTTPS/TLS termination, secrets management, network isolation, intrusion prevention, and automated backup systems**, comprehensive monitoring and observability stack with Prometheus/Grafana/AlertManager, and extensive documentation following established AI template standards.
 
 ## System Overview Architecture
 
@@ -705,91 +705,437 @@ flowchart TD
     D --> OO["Access Information Display"]
 ```
 
-**Security Configuration and Production Readiness**
+# Security Stack Architecture
 
-A comprehensive security framework designed to transform the development-oriented n8n Docker Stack into a production-ready deployment with enterprise-grade security measures, credential management, and network protection.
+The comprehensive security hardening framework that transforms the development n8n Docker Stack into a production-ready deployment with enterprise-grade security measures, network isolation, and credential protection.
 
-**Core Functionality: Security Configuration and Production Readiness**
+**Core Functionality: Security Stack Architecture**
 
-- **Credential Security**: Automated generation and management of strong passwords for all services with secure environment file handling
-- **HTTPS Implementation**: SSL/TLS certificate management with reverse proxy configuration for encrypted communication
-- **Network Isolation**: Docker network segmentation with firewall rules and port access control for service protection
-- **Access Control**: Authentication and authorization systems for n8n, Grafana, and database access with role-based permissions
-- **Data Protection**: Backup strategy implementation with encrypted storage and disaster recovery procedures
+- **SSL/TLS Termination**: Nginx reverse proxy with automated SSL certificate generation for secure HTTPS communication on port 443
+- **Network Isolation**: Multi-tier network architecture with frontend, backend, and database networks providing defense in depth
+- **Secrets Management**: Docker secrets integration for secure credential storage and distribution across all services
+- **Intrusion Prevention**: Fail2ban integration with custom filters for nginx authentication failures and rate limit violations
+- **Security Headers**: Comprehensive HTTP security headers including HSTS, CSP, and XSS protection through nginx configuration
+- **Rate Limiting**: Configurable rate limiting to prevent abuse and DDoS attacks with fail2ban integration
 
-**Architecture Diagram of component: Security Configuration and Production Readiness**
+**Architecture Diagram of component: Security Stack Architecture**
 
 ```mermaid
 ---
-title: Security Configuration Architecture
+title: Comprehensive Security Stack Architecture
 ---
 flowchart TD
-    A["Security Configuration Layer"] --> B["Credential Management"]
-    A --> C["Network Security"]
-    A --> D["Access Control"]
-    A --> E["Data Protection"]
+    A["Security Stack Deployment"] --> B["Frontend Network"]
+    A --> C["Backend Network"]
+    A --> D["Database Network"]
+    A --> E["Docker Secrets Manager"]
+    A --> F["Nginx Reverse Proxy"]
+    A --> G["Fail2ban Intrusion Prevention"]
     
-    B --> F["Environment File Security"]
-    B --> G["Password Generation"]
-    B --> H["Encryption Key Management"]
-    B --> I["Secret Storage"]
+    B --> H["External HTTPS Access :443"]
+    B --> I["External HTTP Access :80"]
+    B --> J["Public Internet Traffic"]
     
-    F --> J[".n8n.env Secured"]
-    F --> K[".postgresql.env Secured"]
-    F --> L[".grafana.env Secured"]
+    C --> K["n8n Application Service"]
+    C --> L["Internal Service Communication"]
+    C --> M["API Gateway Layer"]
     
-    G --> M["Strong Password Policies"]
-    G --> N["Automated Generation"]
-    G --> O["Complexity Requirements"]
+    D --> N["PostgreSQL Database"]
+    D --> O["Database Storage"]
+    D --> P["Most Restricted Access"]
     
-    C --> P["HTTPS Configuration"]
-    C --> Q["Reverse Proxy Setup"]
-    C --> R["Network Isolation"]
-    C --> S["Firewall Rules"]
+    E --> Q["PostgreSQL Credentials"]
+    E --> R["n8n Authentication"]
+    E --> S["Encryption Keys"]
+    E --> T["Grafana Admin Credentials"]
     
-    P --> T["SSL Certificate Management"]
-    P --> U["TLS Termination"]
-    P --> V["HTTPS Enforcement"]
+    F --> U["SSL Certificate Management"]
+    F --> V["Security Headers"]
+    F --> W["Rate Limiting"]
+    F --> X["WebSocket Support"]
     
-    Q --> W["nginx Configuration"]
-    Q --> X["Traefik Setup"]
-    Q --> Y["Load Balancing"]
+    G --> Y["Authentication Failure Detection"]
+    G --> Z["Rate Limit Violation Detection"]
+    G --> AA["IP Blocking and Filtering"]
+    G --> BB["Automated Response"]
     
-    R --> Z["Docker Network Isolation"]
-    R --> AA["Service Segmentation"]
-    R --> BB["Internal Communication"]
+    H --> F
+    I --> F
+    F --> K
     
-    S --> CC["Port Access Control"]
-    S --> DD["External Access Rules"]
-    S --> EE["Service Exposure Limits"]
+    Q --> N
+    R --> K
+    S --> K
+    T --> CC["Grafana Service"]
     
-    D --> FF["Authentication Systems"]
-    D --> GG["Authorization Controls"]
-    D --> HH["Session Management"]
-    D --> II["API Security"]
+    U --> DD["Self-signed Development"]
+    U --> EE["CA-signed Production"]
     
-    FF --> JJ["n8n User Authentication"]
-    FF --> KK["Grafana Admin Access"]
-    FF --> LL["Database Access Control"]
+    V --> FF["HSTS Headers"]
+    V --> GG["CSP Headers"]
+    V --> HH["XSS Protection"]
     
-    GG --> MM["Role-Based Access"]
-    GG --> NN["Permission Management"]
-    GG --> OO["Service Authorization"]
+    Y --> II["nginx-auth Filter"]
+    Z --> JJ["nginx-limit-req Filter"]
     
-    E --> PP["Backup Strategy"]
-    E --> QQ["Volume Security"]
-    E --> RR["Database Protection"]
-    E --> SS["Disaster Recovery"]
+    AA --> KK["iptables Rules"]
+    BB --> LL["Service Restart"]
     
-    PP --> TT["Automated Backups"]
-    PP --> UU["Backup Encryption"]
-    PP --> VV["Retention Policies"]
+    A --> MM["Security Monitoring"]
+    MM --> NN["Log Analysis"]
+    MM --> OO["Alert Generation"]
+    MM --> PP["Security Metrics"]
+```
+
+**Nginx Reverse Proxy Service**
+
+A production-grade reverse proxy that provides SSL termination, security headers, and load balancing for the n8n application with WebSocket support and comprehensive security configurations.
+
+**Core Functionality: Nginx Reverse Proxy Service**
+
+- **SSL/TLS Termination**: Handles all HTTPS encryption/decryption with configurable SSL certificates for secure communication
+- **Security Headers**: Implements comprehensive HTTP security headers including HSTS, Content Security Policy, and XSS protection
+- **Rate Limiting**: Configurable request rate limiting to prevent abuse and ensure service availability under load
+- **WebSocket Support**: Native WebSocket proxying for real-time n8n workflow execution and monitoring
+- **Load Balancing**: Backend service distribution and health checking for high availability deployments
+
+**Architecture Diagram of component: Nginx Reverse Proxy Service**
+
+```mermaid
+---
+title: Nginx Reverse Proxy Service Architecture
+---
+flowchart TD
+    A["Nginx Container :443/:80"] --> B["SSL Configuration"]
+    A --> C["Security Headers"]
+    A --> D["Rate Limiting Engine"]
+    A --> E["Reverse Proxy Logic"]
     
-    QQ --> WW["Volume Permissions"]
-    QQ --> XX["File System Security"]
-    QQ --> YY["Mount Point Protection"]
+    B --> F["SSL Certificate Loading"]
+    B --> G["TLS Protocol Configuration"]
+    B --> H["Cipher Suite Selection"]
     
-    RR --> ZZ["Database Encryption"]
-    RR --> AAA["Access Logging"]
-    RR --> BBB["Connection Security"]
+    F --> I["Self-signed Development"]
+    F --> J["CA-signed Production"]
+    
+    C --> K["HSTS Implementation"]
+    C --> L["Content Security Policy"]
+    C --> M["XSS Protection Headers"]
+    C --> N["Frame Options Security"]
+    
+    D --> O["Request Rate Monitoring"]
+    D --> P["IP-based Rate Limiting"]
+    D --> Q["Burst Control"]
+    
+    E --> R["Backend Health Checking"]
+    E --> S["WebSocket Upgrade Handling"]
+    E --> T["Load Distribution"]
+    
+    R --> U["n8n Service :5678"]
+    S --> U
+    T --> U
+    
+    A --> V["Access Logging"]
+    A --> W["Error Logging"]
+    
+    V --> X["Security Log Analysis"]
+    W --> Y["Error Monitoring"]
+    
+    X --> Z["Fail2ban Integration"]
+    Y --> Z
+```
+
+**Fail2ban Intrusion Prevention System**
+
+An advanced intrusion prevention system that monitors nginx logs and automatically blocks malicious IP addresses based on configurable attack patterns and thresholds.
+
+**Core Functionality: Fail2ban Intrusion Prevention System**
+
+- **Log Monitoring**: Real-time analysis of nginx access and error logs for attack pattern detection
+- **Custom Filters**: Specialized filters for detecting n8n authentication failures and rate limit violations
+- **Automated IP Blocking**: Dynamic iptables rules for blocking malicious IP addresses with configurable ban times
+- **Attack Response**: Intelligent response to various attack types including brute force, DoS, and unauthorized access attempts
+
+**Architecture Diagram of component: Fail2ban Intrusion Prevention System**
+
+```mermaid
+---
+title: Fail2ban Intrusion Prevention Architecture
+---
+flowchart TD
+    A["Fail2ban Service"] --> B["Log File Monitoring"]
+    A --> C["Filter Engine"]
+    A --> D["Action Engine"]
+    A --> E["Jail Configuration"]
+    
+    B --> F["Nginx Access Log"]
+    B --> G["Nginx Error Log"]
+    B --> H["Real-time Log Parsing"]
+    
+    C --> I["Authentication Failure Filter"]
+    C --> J["Rate Limit Violation Filter"]
+    C --> K["Custom Attack Patterns"]
+    
+    I --> L["nginx-auth.conf"]
+    J --> M["nginx-limit-req.conf"]
+    K --> N["User-defined Rules"]
+    
+    D --> O["IP Blocking Actions"]
+    D --> P["Notification Actions"]
+    D --> Q["Logging Actions"]
+    
+    O --> R["iptables Rules"]
+    O --> S["Docker Network Rules"]
+    O --> T["Temporary Bans"]
+    O --> U["Permanent Bans"]
+    
+    E --> V["nginx-auth Jail"]
+    E --> W["nginx-limit-req Jail"]
+    E --> X["Jail Configuration"]
+    
+    V --> Y["Max Retry Threshold"]
+    V --> Z["Ban Time Configuration"]
+    V --> AA["Find Time Window"]
+    
+    W --> Y
+    W --> Z
+    W --> AA
+    
+    P --> BB["Email Notifications"]
+    P --> CC["Webhook Alerts"]
+    P --> DD["n8n Workflow Triggers"]
+    
+    Q --> EE["Ban/Unban Logging"]
+    Q --> FF["Statistics Tracking"]
+    Q --> GG["Attack Analysis"]
+```
+
+**Docker Secrets Management System**
+
+A comprehensive secrets management solution that provides secure storage and distribution of sensitive credentials across all services in the n8n Docker Stack.
+
+**Core Functionality: Docker Secrets Management System**
+
+- **Credential Generation**: Automated generation of strong passwords and encryption keys for all services
+- **Secure Distribution**: Docker secrets mechanism for distributing credentials to containers without environment variable exposure
+- **Access Control**: Service-specific secret access with minimal privilege principles
+- **Rotation Support**: Framework for credential rotation and secret updates across the entire stack
+
+**Architecture Diagram of component: Docker Secrets Management System**
+
+```mermaid
+---
+title: Docker Secrets Management Architecture
+---
+flowchart TD
+    A["Docker Secrets Manager"] --> B["Secret Generation"]
+    A --> C["Secret Storage"]
+    A --> D["Secret Distribution"]
+    A --> E["Access Control"]
+    
+    B --> F["Password Generation"]
+    B --> G["Encryption Key Generation"]
+    B --> H["Username Generation"]
+    
+    F --> I["Strong Password Policies"]
+    F --> J["Cryptographic Randomness"]
+    
+    G --> K["n8n Encryption Key"]
+    G --> L["Database Encryption"]
+    
+    C --> M["postgres_user.txt"]
+    C --> N["postgres_password.txt"]
+    C --> O["postgres_db.txt"]
+    C --> P["n8n_basic_auth_user.txt"]
+    C --> Q["n8n_basic_auth_password.txt"]
+    C --> R["n8n_encryption_key.txt"]
+    C --> S["grafana_admin_user.txt"]
+    C --> T["grafana_admin_password.txt"]
+    
+    D --> U["PostgreSQL Container"]
+    D --> V["n8n Container"]
+    D --> W["Grafana Container"]
+    
+    M --> U
+    N --> U
+    O --> U
+    
+    P --> V
+    Q --> V
+    R --> V
+    
+    S --> W
+    T --> W
+    
+    E --> X["Service-specific Access"]
+    E --> Y["Read-only Mount"]
+    E --> Z["Runtime Security"]
+    
+    X --> AA["Minimal Privilege"]
+    Y --> BB["Immutable Secrets"]
+    Z --> CC["No Environment Exposure"]
+```
+
+**Network Isolation Architecture**
+
+A multi-tier network security architecture that implements defense in depth through network segmentation and access control for the n8n Docker Stack.
+
+**Core Functionality: Network Isolation Architecture**
+
+- **Frontend Network**: Public-facing network for external access through nginx reverse proxy with controlled internet exposure
+- **Backend Network**: Internal application network for service communication with restricted external access
+- **Database Network**: Highly restricted network for database operations with no external connectivity
+- **Network Policies**: Docker network isolation with subnet separation and traffic flow control
+
+**Architecture Diagram of component: Network Isolation Architecture**
+
+```mermaid
+---
+title: Multi-tier Network Isolation Architecture
+---
+flowchart TD
+    A["Network Isolation System"] --> B["Frontend Network"]
+    A --> C["Backend Network"]
+    A --> D["Database Network"]
+    A --> E["Network Policies"]
+    
+    B --> F["Subnet: 172.20.0.0/16"]
+    B --> G["External Access Allowed"]
+    B --> H["Internet Connectivity"]
+    
+    F --> I["Nginx Reverse Proxy"]
+    G --> I
+    H --> I
+    
+    C --> J["Subnet: 172.21.0.0/16"]
+    C --> K["Internal Access Only"]
+    C --> L["Service Communication"]
+    
+    J --> M["n8n Application"]
+    J --> N["Ollama AI Service"]
+    J --> O["Monitoring Services"]
+    
+    K --> M
+    K --> N
+    K --> O
+    
+    D --> P["Subnet: 172.22.0.0/16"]
+    D --> Q["No External Access"]
+    D --> R["Database Operations Only"]
+    
+    P --> S["PostgreSQL Database"]
+    Q --> S
+    R --> S
+    
+    E --> T["Inter-network Communication"]
+    E --> U["Access Control Rules"]
+    E --> V["Traffic Filtering"]
+    
+    T --> W["Frontend to Backend"]
+    T --> X["Backend to Database"]
+    T --> Y["No Direct Frontend-Database"]
+    
+    U --> Z["Service-specific Access"]
+    U --> AA["Port-based Filtering"]
+    U --> BB["Protocol Restrictions"]
+    
+    V --> CC["Firewall Rules"]
+    V --> DD["Network Monitoring"]
+    V --> EE["Intrusion Detection"]
+    
+    I --> M
+    M --> S
+    
+    style B fill:#ffcccc
+    style C fill:#ffffcc
+    style D fill:#ccffcc
+```
+
+**Automated Backup and Recovery System**
+
+A comprehensive backup and disaster recovery solution that provides automated data protection with integrity verification and selective restore capabilities for the entire n8n Docker Stack.
+
+**Core Functionality: Automated Backup and Recovery System**
+
+- **Comprehensive Backup**: Automated backup of PostgreSQL database, n8n data volumes, configuration files, and workflow definitions
+- **Integrity Verification**: Backup integrity checking with checksums and validation to ensure reliable restore operations
+- **Retention Management**: Configurable backup retention policies with automated cleanup of old backups
+- **Selective Restore**: Granular restore options for database, n8n data, configurations, or complete system recovery
+
+**Architecture Diagram of component: Automated Backup and Recovery System**
+
+```mermaid
+---
+title: Automated Backup and Recovery Architecture
+---
+flowchart TD
+    A["Backup and Recovery System"] --> B["Backup Engine"]
+    A --> C["Restore Engine"]
+    A --> D["Integrity Verification"]
+    A --> E["Storage Management"]
+    
+    B --> F["Database Backup"]
+    B --> G["Volume Backup"]
+    B --> H["Configuration Backup"]
+    B --> I["Workflow Backup"]
+    
+    F --> J["PostgreSQL pg_dump"]
+    F --> K["SQL Export Compression"]
+    F --> L["Database Schema Backup"]
+    
+    G --> M["n8n Data Volume"]
+    G --> N["Ollama Model Data"]
+    G --> O["Monitoring Data"]
+    
+    H --> P["Docker Compose Files"]
+    H --> Q["Environment Files"]
+    H --> R["Nginx Configuration"]
+    H --> S["Security Settings"]
+    
+    I --> T["JSON Workflow Files"]
+    I --> U["Workflow Metadata"]
+    I --> V["Credential Backup"]
+    
+    C --> W["Database Restore"]
+    C --> X["Volume Restore"]
+    C --> Y["Configuration Restore"]
+    C --> Z["Selective Recovery"]
+    
+    W --> AA["SQL Import Process"]
+    W --> BB["Schema Recreation"]
+    W --> CC["Data Consistency Check"]
+    
+    X --> DD["Volume Extraction"]
+    X --> EE["File System Restore"]
+    X --> FF["Permission Restoration"]
+    
+    Y --> GG["Config File Restoration"]
+    Y --> HH["Environment Rebuilding"]
+    Y --> II["Service Reconfiguration"]
+    
+    Z --> JJ["--database Option"]
+    Z --> KK["--n8n-data Option"]
+    Z --> LL["--configs Option"]
+    Z --> MM["--workflows Option"]
+    
+    D --> NN["Checksum Verification"]
+    D --> OO["Archive Integrity"]
+    D --> PP["Backup Validation"]
+    
+    NN --> QQ["SHA256 Checksums"]
+    OO --> RR["Compression Test"]
+    PP --> SS["Restore Test"]
+    
+    E --> TT["Retention Policy"]
+    E --> UU["Cleanup Automation"]
+    E --> VV["Storage Monitoring"]
+    
+    TT --> WW["30-Day Retention"]
+    UU --> XX["Old Backup Removal"]
+    VV --> YY["Disk Space Monitoring"]
+    
+    A --> ZZ["Backup Reporting"]
+    ZZ --> AAA["Backup Status"]
+    ZZ --> BBB["Size Statistics"]
+    ZZ --> CCC["Error Logging"]
 ```

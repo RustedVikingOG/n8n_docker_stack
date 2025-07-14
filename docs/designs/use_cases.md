@@ -954,574 +954,6 @@ This diagram shows the relationships between test components and their validatio
 
 ```mermaid
 ---
-title: Monitoring Testing Data Entity Relationships
----
-erDiagram
-    TEST_SUITE ||--o{ CONTAINER_TESTS : includes
-    TEST_SUITE ||--o{ HEALTH_TESTS : includes
-    TEST_SUITE ||--o{ METRICS_TESTS : includes
-    TEST_SUITE ||--o{ DASHBOARD_TESTS : includes
-    TEST_SUITE ||--o{ ALERT_TESTS : includes
-    TEST_SUITE ||--o{ INTEGRATION_TESTS : includes
-    
-    CONTAINER_TESTS ||--|| PROMETHEUS_CONTAINER : validates
-    CONTAINER_TESTS ||--|| GRAFANA_CONTAINER : validates
-    CONTAINER_TESTS ||--|| ALERTMANAGER_CONTAINER : validates
-    CONTAINER_TESTS ||--|| NODE_EXPORTER_CONTAINER : validates
-    CONTAINER_TESTS ||--|| CADVISOR_CONTAINER : validates
-    CONTAINER_TESTS ||--|| POSTGRES_EXPORTER_CONTAINER : validates
-    
-    HEALTH_TESTS ||--|| PROMETHEUS_HEALTH : checks
-    HEALTH_TESTS ||--|| GRAFANA_HEALTH : checks
-    HEALTH_TESTS ||--|| ALERTMANAGER_HEALTH : checks
-    HEALTH_TESTS ||--|| EXPORTER_HEALTH : checks
-    
-    METRICS_TESTS ||--o{ PROMETHEUS_TARGETS : validates
-    METRICS_TESTS ||--o{ EXPORTER_METRICS : validates
-    METRICS_TESTS ||--|| METRICS_FORMAT : validates
-    
-    PROMETHEUS_TARGETS ||--|| N8N_TARGET : includes
-    PROMETHEUS_TARGETS ||--|| POSTGRES_TARGET : includes
-    PROMETHEUS_TARGETS ||--|| NODE_TARGET : includes
-    PROMETHEUS_TARGETS ||--|| CADVISOR_TARGET : includes
-    
-    EXPORTER_METRICS ||--|| NODE_CPU_METRICS : includes
-    EXPORTER_METRICS ||--|| CONTAINER_METRICS : includes
-    EXPORTER_METRICS ||--|| DATABASE_METRICS : includes
-    
-    DASHBOARD_TESTS ||--|| GRAFANA_DATASOURCE : validates
-    DASHBOARD_TESTS ||--o{ DASHBOARD_RENDERING : checks
-    DASHBOARD_TESTS ||--|| DASHBOARD_PROVISIONING : validates
-    
-    DASHBOARD_RENDERING ||--|| N8N_DASHBOARD : includes
-    DASHBOARD_RENDERING ||--|| SYSTEM_DASHBOARD : includes
-    
-    ALERT_TESTS ||--o{ ALERT_RULES : validates
-    ALERT_TESTS ||--|| ALERTMANAGER_CONFIG : checks
-    ALERT_TESTS ||--o{ NOTIFICATION_CHANNELS : validates
-    
-    INTEGRATION_TESTS ||--|| N8N_NETWORK : validates
-    INTEGRATION_TESTS ||--|| DOCUMENTATION : verifies
-    INTEGRATION_TESTS ||--|| CONFIG_FILES : validates
-    
-    TEST_RESULTS {
-        int total_tests "count"
-        int passed_tests "count"
-        int failed_tests "count"
-        string status "pass/fail"
-        datetime timestamp "execution_time"
-    }
-```
-
-## USE-CASE: Dashboard Customization and Metrics Visualization
-
-**Feature 1: Custom Dashboard Creation and Metrics Visualization for n8n Operations**
-
-|| definition |
-|--|--|
-| GIVEN | Grafana is running with pre-configured dashboards and Prometheus data source connected |
-| WHEN | Users access Grafana interface to create custom dashboards or modify existing ones for specific n8n operational insights |
-| THEN | Custom dashboards are created with n8n-specific metrics, workflow performance visualization, and operational KPIs with automatic persistence and provisioning support |
-
-**State Diagram: Logic flow within feature**
-
-This diagram shows the dashboard customization and metrics visualization workflow.
-
-```mermaid
----
-title: Dashboard Customization State Flow
----
-stateDiagram-v2
-    [*] --> GrafanaAccess
-    GrafanaAccess --> DashboardSelection
-    DashboardSelection --> ExistingDashboard
-    DashboardSelection --> NewDashboard
-    
-    ExistingDashboard --> DashboardEdit
-    NewDashboard --> DashboardCreation
-    
-    DashboardCreation --> PanelConfiguration
-    DashboardEdit --> PanelConfiguration
-    
-    PanelConfiguration --> MetricsQuery
-    MetricsQuery --> PrometheusQuery
-    PrometheusQuery --> QueryValidation
-    QueryValidation --> VisualizationSetup
-    
-    VisualizationSetup --> GraphConfiguration
-    VisualizationSetup --> TableConfiguration
-    VisualizationSetup --> GaugeConfiguration
-    VisualizationSetup --> AlertConfiguration
-    
-    GraphConfiguration --> DashboardSave
-    TableConfiguration --> DashboardSave
-    GaugeConfiguration --> DashboardSave
-    AlertConfiguration --> DashboardSave
-    
-    DashboardSave --> DashboardExport
-    DashboardExport --> ProvisioningUpdate
-    ProvisioningUpdate --> DashboardPersistence
-    
-    DashboardPersistence --> [*]
-```
-
-**Sequence Diagram: Interactions between systems to enable Feature**
-
-This flowchart shows the interaction between users, Grafana, and Prometheus for dashboard customization.
-
-```mermaid
----
-title: Dashboard Customization Interaction Flow
----
-flowchart TD
-    A["User Grafana Access"] --> B["Grafana Authentication"]
-    B --> C["Dashboard Interface"]
-    C --> D["Dashboard Management"]
-    
-    D --> E["Create New Dashboard"]
-    D --> F["Edit Existing Dashboard"]
-    
-    E --> G["Panel Creation"]
-    F --> G
-    
-    G --> H["Metrics Selection"]
-    H --> I["Prometheus Query Builder"]
-    I --> J["Query Execution"]
-    
-    J --> K["Prometheus Metrics API"]
-    K --> L["Time Series Data Retrieval"]
-    L --> M["Data Formatting"]
-    
-    M --> N["Visualization Rendering"]
-    N --> O["Panel Display"]
-    O --> P["Dashboard Preview"]
-    
-    P --> Q["Dashboard Validation"]
-    Q --> R["Save Dashboard"]
-    R --> S["Dashboard Export"]
-    
-    S --> T["JSON Dashboard Export"]
-    T --> U["Provisioning Directory"]
-    U --> V["Automatic Provisioning"]
-    
-    V --> W["Dashboard Persistence"]
-    W --> X["Version Control"]
-    X --> Y["Backup Creation"]
-    
-    A --> Z["Pre-configured Dashboards"]
-    Z --> AA["n8n Stack Overview"]
-    Z --> BB["System Resources"]
-    Z --> CC["Database Performance"]
-    
-    AA --> DD["Workflow Metrics"]
-    AA --> EE["Service Health"]
-    AA --> FF["API Performance"]
-    
-    BB --> GG["CPU Utilization"]
-    BB --> HH["Memory Usage"]
-    BB --> II["Disk Space"]
-    BB --> JJ["Network Traffic"]
-    
-    CC --> KK["Connection Pools"]
-    CC --> LL["Query Performance"]
-    CC --> MM["Database Size"]
-```
-
-**Data Entity Relationship: Data structure for entities in Feature**
-
-This diagram shows the relationships between dashboard components and metrics sources.
-
-```mermaid
----
-title: Dashboard Customization Data Entity Relationships
----
-erDiagram
-    GRAFANA_INSTANCE ||--o{ DASHBOARDS : manages
-    GRAFANA_INSTANCE ||--|| PROMETHEUS_DATASOURCE : connects_to
-    GRAFANA_INSTANCE ||--o{ USER_SESSIONS : handles
-    
-    DASHBOARDS ||--o{ PANELS : contains
-    DASHBOARDS ||--|| DASHBOARD_CONFIG : has
-    DASHBOARDS ||--o{ DASHBOARD_VARIABLES : includes
-    
-    PANELS ||--|| METRICS_QUERY : executes
-    PANELS ||--|| VISUALIZATION_CONFIG : has
-    PANELS ||--|| ALERT_CONFIG : may_have
-    
-    METRICS_QUERY ||--|| PROMETHEUS_DATASOURCE : queries
-    PROMETHEUS_DATASOURCE ||--o{ METRIC_SERIES : provides
-    
-    METRIC_SERIES ||--|| N8N_METRICS : includes
-    METRIC_SERIES ||--|| SYSTEM_METRICS : includes
-    METRIC_SERIES ||--|| DATABASE_METRICS : includes
-    METRIC_SERIES ||--|| CONTAINER_METRICS : includes
-    
-    N8N_METRICS ||--|| WORKFLOW_EXECUTION : tracks
-    N8N_METRICS ||--|| API_RESPONSE_TIME : tracks
-    N8N_METRICS ||--|| SERVICE_HEALTH : tracks
-    
-    SYSTEM_METRICS ||--|| CPU_USAGE : includes
-    SYSTEM_METRICS ||--|| MEMORY_USAGE : includes
-    SYSTEM_METRICS ||--|| DISK_USAGE : includes
-    SYSTEM_METRICS ||--|| NETWORK_TRAFFIC : includes
-    
-    DATABASE_METRICS ||--|| CONNECTION_COUNT : includes
-    DATABASE_METRICS ||--|| QUERY_DURATION : includes
-    DATABASE_METRICS ||--|| DATABASE_SIZE : includes
-    
-    CONTAINER_METRICS ||--|| CONTAINER_CPU : includes
-    CONTAINER_METRICS ||--|| CONTAINER_MEMORY : includes
-    CONTAINER_METRICS ||--|| CONTAINER_RESTARTS : includes
-    
-    VISUALIZATION_CONFIG ||--|| GRAPH_PANEL : supports
-    VISUALIZATION_CONFIG ||--|| TABLE_PANEL : supports
-    VISUALIZATION_CONFIG ||--|| GAUGE_PANEL : supports
-    VISUALIZATION_CONFIG ||--|| STAT_PANEL : supports
-    
-    DASHBOARD_CONFIG {
-        string title "dashboard name"
-        string description "dashboard purpose"
-        json tags "categorization"
-        boolean editable "modification allowed"
-        string time_range "default time range"
-        int refresh_interval "auto refresh seconds"
-    }
-    
-    ALERT_CONFIG {
-        string condition "alert condition"
-        int threshold "alert threshold"
-        string frequency "evaluation frequency"
-        string notification "alert destination"
-    }
-```
-
-## USE-CASE: Alert Management and Notification Routing
-
-**Feature 1: AlertManager Configuration and Alert Routing**
-
-|| definition |
-|--|--|
-| GIVEN | Prometheus generates alerts based on defined rules and thresholds |
-| WHEN | Alert conditions are met for service health, resource usage, or performance issues |
-| THEN | AlertManager routes notifications through configured channels with intelligent grouping and silencing |
-
-**State Diagram: Logic flow within feature**
-
-This diagram shows the alert lifecycle from detection to resolution.
-
-```mermaid
----
-title: Alert Management State Flow
----
-stateDiagram-v2
-    [*] --> MetricCollection
-    MetricCollection --> ThresholdEvaluation
-    ThresholdEvaluation --> AlertTriggered
-    ThresholdEvaluation --> NormalOperation
-    AlertTriggered --> AlertManagerReceive
-    AlertManagerReceive --> AlertGrouping
-    AlertGrouping --> NotificationRouting
-    NotificationRouting --> WebhookDelivery
-    NotificationRouting --> SilencedAlert
-    WebhookDelivery --> AlertAcknowledged
-    WebhookDelivery --> AlertEscalation
-    AlertAcknowledged --> AlertResolved
-    AlertEscalation --> CriticalNotification
-    CriticalNotification --> AlertResolved
-    AlertResolved --> NormalOperation
-    SilencedAlert --> NormalOperation
-    NormalOperation --> MetricCollection
-```
-
-**Sequence Diagram: Interactions between systems to enable Feature**
-
-This flowchart shows the interaction between alert components during notification processing.
-
-```mermaid
----
-title: Alert Notification Processing Flow
----
-flowchart TD
-    A["Prometheus Alert Rule Evaluation"] --> B["Alert Threshold Breach"]
-    B --> C["Alert Generation"]
-    C --> D["AlertManager Reception"]
-    D --> E["Alert Grouping Logic"]
-    E --> F["Silence Check"]
-    F --> G{"Alert Silenced?"}
-    G -->|Yes| H["Drop Alert"]
-    G -->|No| I["Route Selection"]
-    I --> J["Webhook Configuration"]
-    J --> K["Notification Delivery"]
-    K --> L{"Delivery Success?"}
-    L -->|Yes| M["Mark as Sent"]
-    L -->|No| N["Retry Logic"]
-    N --> O["Escalation Process"]
-    O --> P["Critical Alert"]
-    P --> Q["Admin Notification"]
-    M --> R["Alert Tracking"]
-    H --> R
-    Q --> R
-```
-
-**Data Entity Relationships: Data structures that relate to feature**
-
-```mermaid
----
-title: Alert Management Data Entity Relationships
----
-erDiagram
-    ALERT_RULES ||--o{ ALERTS : generates
-    ALERTS ||--o{ NOTIFICATIONS : creates
-    ALERTS ||--o{ SILENCES : "can be silenced by"
-    
-    ALERT_RULES {
-        string alert_name
-        string expression
-        string duration
-        string severity
-        json labels
-        json annotations
-    }
-    
-    ALERTS {
-        string alert_id
-        string status
-        timestamp starts_at
-        timestamp ends_at
-        json labels
-        json annotations
-        string fingerprint
-    }
-    
-    NOTIFICATIONS {
-        string notification_id
-        string alert_id
-        string route_match
-        string webhook_url
-        timestamp sent_at
-        string status
-        string delivery_method
-    }
-    
-    SILENCES {
-        string silence_id
-        json matchers
-        timestamp starts_at
-        timestamp ends_at
-        string created_by
-        string comment
-    }
-    
-    ROUTING_CONFIG ||--o{ NOTIFICATIONS : configures
-    ROUTING_CONFIG {
-        string route_name
-        json match_labels
-        string webhook_url
-        string group_by
-        string group_wait
-        string repeat_interval
-    }
-```
-
-## USE-CASE: Capacity Planning and Resource Monitoring
-
-**Feature 1: System Resource Analysis and Growth Prediction**
-
-|| definition |
-|--|--|
-| GIVEN | Prometheus collects continuous metrics for CPU, memory, disk, and network usage |
-| WHEN | Historical data analysis reveals usage trends and growth patterns |
-| THEN | Grafana dashboards provide capacity planning insights with resource utilization forecasts |
-
-**State Diagram: Logic flow within feature**
-
-This diagram shows the capacity monitoring and analysis process flow.
-
-```mermaid
----
-title: Capacity Planning Analysis State Flow
----
-stateDiagram-v2
-    [*] --> MetricsCollection
-    MetricsCollection --> DataAggregation
-    DataAggregation --> TrendAnalysis
-    TrendAnalysis --> CapacityCalculation
-    CapacityCalculation --> ThresholdComparison
-    ThresholdComparison --> CapacityAlert
-    ThresholdComparison --> CapacityNormal
-    CapacityAlert --> ScalingRecommendation
-    ScalingRecommendation --> ResourcePlanning
-    ResourcePlanning --> ActionRequired
-    CapacityNormal --> ContinuousMonitoring
-    ActionRequired --> [*]
-    ContinuousMonitoring --> MetricsCollection
-```
-
-**Sequence Diagram: Interactions between systems to enable Feature**
-
-This flowchart shows the interaction between capacity monitoring components.
-
-```mermaid
----
-title: Capacity Planning Data Processing Flow
----
-flowchart TD
-    A["Node Exporter Metrics"] --> B["System Resource Collection"]
-    C["cAdvisor Metrics"] --> D["Container Resource Collection"]
-    E["PostgreSQL Exporter"] --> F["Database Resource Collection"]
-    G["n8n Metrics"] --> H["Application Resource Collection"]
-    
-    B --> I["Prometheus Data Aggregation"]
-    D --> I
-    F --> I
-    H --> I
-    
-    I --> J["Historical Data Analysis"]
-    J --> K["Trend Calculation"]
-    K --> L["Growth Rate Prediction"]
-    L --> M["Capacity Threshold Analysis"]
-    M --> N{"Threshold Exceeded?"}
-    N -->|Yes| O["Generate Capacity Alert"]
-    N -->|No| P["Continue Monitoring"]
-    O --> Q["Grafana Dashboard Update"]
-    P --> Q
-    Q --> R["Resource Planning Report"]
-```
-
-**Data Entity Relationships: Data structures that relate to feature**
-
-```mermaid
----
-title: Capacity Planning Data Entity Relationships
----
-erDiagram
-    RESOURCE_METRICS ||--o{ CAPACITY_ANALYSIS : analyzes
-    CAPACITY_ANALYSIS ||--o{ SCALING_RECOMMENDATIONS : generates
-    RESOURCE_METRICS ||--o{ THRESHOLD_ALERTS : triggers
-    
-    RESOURCE_METRICS {
-        timestamp time
-        string instance
-        string job
-        float cpu_usage_percent
-        float memory_usage_bytes
-        float disk_usage_bytes
-        float network_io_bytes
-        float container_cpu_usage
-        float container_memory_usage
-    }
-    
-    CAPACITY_ANALYSIS {
-        string analysis_id
-        timestamp period_start
-        timestamp period_end
-        float growth_rate_cpu
-        float growth_rate_memory
-        float growth_rate_disk
-        float predicted_capacity_days
-        string resource_type
-    }
-    
-    SCALING_RECOMMENDATIONS {
-        string recommendation_id
-        string resource_type
-        string action_type
-        float recommended_capacity
-        timestamp prediction_date
-        string priority_level
-        string description
-    }
-    
-    THRESHOLD_ALERTS {
-        string alert_id
-        string resource_type
-        float threshold_value
-        float current_value
-        timestamp alert_time
-        string severity
-    }
-```
-
-## USE-CASE: Monitoring Stack Troubleshooting and Diagnostics
-
-**Feature 1: Health Check and Service Discovery Diagnostics**
-
-|| definition |
-|--|--|
-| GIVEN | Monitoring services are deployed but experiencing connectivity or data collection issues |
-| WHEN | Troubleshooting scripts and diagnostic commands are executed |
-| THEN | Service health status, connectivity issues, and configuration problems are identified and resolved |
-
-**State Diagram: Logic flow within feature**
-
-This diagram shows the troubleshooting process for monitoring infrastructure.
-
-```mermaid
----
-title: Monitoring Troubleshooting State Flow
----
-stateDiagram-v2
-    [*] --> IssueDetection
-    IssueDetection --> ServiceHealthCheck
-    ServiceHealthCheck --> PrometheusCheck
-    ServiceHealthCheck --> GrafanaCheck
-    ServiceHealthCheck --> AlertManagerCheck
-    PrometheusCheck --> TargetDiscovery
-    TargetDiscovery --> ScrapeTargetAnalysis
-    ScrapeTargetAnalysis --> MetricsValidation
-    GrafanaCheck --> DashboardValidation
-    DashboardValidation --> DataSourceCheck
-    AlertManagerCheck --> AlertRuleValidation
-    AlertRuleValidation --> NotificationTest
-    MetricsValidation --> IssueResolution
-    DataSourceCheck --> IssueResolution
-    NotificationTest --> IssueResolution
-    IssueResolution --> SystemValidation
-    SystemValidation --> [*]
-```
-
-**Sequence Diagram: Interactions between systems to enable Feature**
-
-This flowchart shows the diagnostic interaction flow between monitoring components.
-
-```mermaid
----
-title: Monitoring Diagnostics Interaction Flow
----
-flowchart TD
-    A["Diagnostic Script Execution"] --> B["Service Status Check"]
-    B --> C["Prometheus Health API"]
-    B --> D["Grafana Health API"]
-    B --> E["AlertManager Health API"]
-    
-    C --> F["Target Health Validation"]
-    F --> G["Scrape Configuration Check"]
-    G --> H["Network Connectivity Test"]
-    
-    D --> I["Dashboard Loading Test"]
-    I --> J["DataSource Connectivity"]
-    J --> K["Query Execution Test"]
-    
-    E --> L["Alert Rule Validation"]
-    L --> M["Notification Channel Test"]
-    M --> N["Webhook Delivery Test"]
-    
-    H --> O["Issue Identification"]
-    K --> O
-    N --> O
-    O --> P{"Issues Found?"}
-    P -->|Yes| Q["Generate Diagnostic Report"]
-    P -->|No| R["System Healthy"]
-    Q --> S["Remediation Suggestions"]
-    S --> T["Auto-Fix Attempts"]
-    T --> U["Manual Intervention Required"]
-    R --> V["Monitoring Validated"]
-```
-
-**Data Entity Relationships: Data structures that relate to feature**
-
-```mermaid
----
 title: Monitoring Diagnostics Data Entity Relationships
 ---
 erDiagram
@@ -1541,8 +973,8 @@ erDiagram
     
     TEST_RESULTS {
         string result_id
-        string test_id
-        string result_status
+        string test_case_id
+        string status
         string error_message
         json result_data
         float execution_duration
@@ -1578,346 +1010,360 @@ erDiagram
     }
 ```
 
-## USE-CASE: Comprehensive Testing Infrastructure and Validation Pipeline
+## USE-CASE: Security Hardening and Production Readiness
 
-**Feature 1: Automated Testing Pipeline with Multi-level Validation**
+**Feature 1: Comprehensive Security Stack Deployment**
 
 || definition |
 |--|--|
-| GIVEN | Testing infrastructure is available with test-monitoring.sh, verify-integration.sh, and start-monitoring.sh scripts |
-| WHEN | Developers or operators need to validate monitoring stack functionality, deployment readiness, and integration completeness |
-| THEN | Comprehensive automated testing provides detailed validation reports with pass/fail status for all components, services, and integrations |
+| GIVEN | A development n8n Docker Stack requires production security hardening |
+| WHEN | The security setup script is executed and security-enhanced Docker Compose is deployed |
+| THEN | A production-ready n8n instance is available with HTTPS, network isolation, intrusion prevention, and secure credential management |
 
 **State Diagram: Logic flow within feature**
 
-This diagram shows the comprehensive testing pipeline flow from initialization to completion.
+This diagram shows the security hardening process from development to production deployment.
 
 ```mermaid
 ---
-title: Testing Infrastructure Validation State Flow
+title: Security Hardening Deployment State Flow
 ---
 stateDiagram-v2
-    [*] --> TestInitialization
-    TestInitialization --> DependencyCheck
-    DependencyCheck --> ContainerValidation
-    ContainerValidation --> ServiceHealthValidation
-    ServiceHealthValidation --> NetworkConnectivityTests
-    NetworkConnectivityTests --> MetricsCollectionValidation
-    MetricsCollectionValidation --> DashboardFunctionalityTests
-    DashboardFunctionalityTests --> AlertSystemValidation
-    AlertSystemValidation --> IntegrationCompleteness
-    IntegrationCompleteness --> ConfigurationValidation
-    ConfigurationValidation --> DocumentationVerification
-    DocumentationVerification --> FunctionalTestExecution
-    FunctionalTestExecution --> TestResultsAggregation
-    TestResultsAggregation --> ValidationComplete
-    ValidationComplete --> TestReportGeneration
-    TestReportGeneration --> [*]
+    [*] --> SecuritySetupInit
+    SecuritySetupInit --> CredentialGeneration
+    CredentialGeneration --> SSLCertificateSetup
+    SSLCertificateSetup --> NetworkIsolationConfig
+    NetworkIsolationConfig --> NginxReverseProxySetup
+    NginxReverseProxySetup --> Fail2banConfiguration
+    Fail2banConfiguration --> SecurityValidation
+    SecurityValidation --> ProductionDeployment
+    ProductionDeployment --> [*]
 ```
 
 **Sequence Diagram: Interactions between systems to enable Feature**
 
-This flowchart shows the interaction between testing scripts and system components during comprehensive validation.
+This flowchart shows the security component initialization and integration process.
 
 ```mermaid
 ---
-title: Testing Infrastructure Interaction Flow
+title: Security Stack Integration Flow
 ---
 flowchart TD
-    A["Test Script Execution"] --> B["Dependency Validation"]
-    B --> C["Docker Environment Check"]
-    C --> D["Container Status Verification"]
-    D --> E["Service Health API Calls"]
-    E --> F["Network Connectivity Tests"]
-    F --> G["Metrics Endpoint Validation"]
-    G --> H["Dashboard Functionality Tests"]
-    H --> I["Alert System Validation"]
-    I --> J["Integration Verification"]
-    J --> K["Configuration Completeness"]
-    K --> L["Documentation Validation"]
-    L --> M["Functional Test Execution"]
-    M --> N["Test Results Aggregation"]
-    N --> O["Report Generation"]
+    A["Security Setup Script"] --> B["Generate Docker Secrets"]
+    B --> C["Create SSL Certificates"]
+    C --> D["Configure Network Isolation"]
+    D --> E["Setup Nginx Reverse Proxy"]
+    E --> F["Configure Fail2ban Rules"]
+    F --> G["Deploy Security Stack"]
+    G --> H["Validate Security Configuration"]
+    H --> I["HTTPS n8n Access Available"]
     
-    B --> P["curl, jq, docker Availability"]
-    C --> Q["Docker Daemon Access"]
-    D --> R["Container Running Status"]
-    E --> S["Health Endpoint Responses"]
-    F --> T["Network Connectivity"]
-    G --> U["Metrics Endpoint Availability"]
-    H --> V["Grafana Dashboard Load"]
-    I --> W["AlertManager Configuration"]
-    J --> X["n8n Stack Integration"]
-    K --> Y["Config File Validation"]
-    L --> Z["Documentation Completeness"]
-    M --> AA["End-to-End Testing"]
+    B --> J["PostgreSQL Credentials"]
+    B --> K["n8n Authentication"]
+    B --> L["Grafana Admin Access"]
+    B --> M["Encryption Keys"]
     
-    P --> BB["Pass/Fail Status"]
-    Q --> BB
-    R --> BB
-    S --> BB
-    T --> BB
-    U --> BB
-    V --> BB
-    W --> BB
-    X --> BB
-    Y --> BB
-    Z --> BB
-    AA --> BB
+    C --> N["Self-signed Development"]
+    C --> O["CA-signed Production Ready"]
     
-    BB --> CC["Test Summary Report"]
-    CC --> DD["Success/Failure Exit Code"]
+    D --> P["Frontend Network"]
+    D --> Q["Backend Network"]
+    D --> R["Database Network"]
+    
+    E --> S["SSL Termination"]
+    E --> T["Security Headers"]
+    E --> U["Rate Limiting"]
+    E --> V["WebSocket Support"]
+    
+    F --> W["Authentication Failure Detection"]
+    F --> X["Rate Limit Violation Monitoring"]
+    F --> Y["Automated IP Blocking"]
 ```
 
-**Data Entity Relationships: Data structures that relate to feature**
+**Data Entity Relationship: Data structure for entities in Feature**
+
+This diagram shows the security component relationships and data flow.
 
 ```mermaid
 ---
-title: Testing Infrastructure Data Entity Relationships
+title: Security Stack Data Entity Relationships
 ---
 erDiagram
-    TEST_SUITE ||--o{ TEST_SCRIPTS : includes
-    TEST_SCRIPTS ||--o{ TEST_CATEGORIES : contains
-    TEST_CATEGORIES ||--o{ TEST_CASES : includes
-    TEST_CASES ||--o{ TEST_RESULTS : generates
+    SECURITY_STACK ||--o{ DOCKER_SECRETS : manages
+    SECURITY_STACK ||--o{ NETWORK_ISOLATION : implements
+    SECURITY_STACK ||--o{ NGINX_PROXY : includes
+    SECURITY_STACK ||--o{ FAIL2BAN_IPS : includes
     
-    TEST_SCRIPTS ||--|| MONITORING_TEST : includes
-    TEST_SCRIPTS ||--|| INTEGRATION_TEST : includes
-    TEST_SCRIPTS ||--|| STARTUP_TEST : includes
+    DOCKER_SECRETS ||--o{ SERVICE_CREDENTIALS : stores
+    NETWORK_ISOLATION ||--o{ NETWORK_TIERS : defines
+    NGINX_PROXY ||--o{ SSL_CERTIFICATES : uses
+    FAIL2BAN_IPS ||--o{ BLOCKED_IPS : tracks
     
-    MONITORING_TEST ||--o{ CONTAINER_TESTS : executes
-    MONITORING_TEST ||--o{ HEALTH_TESTS : executes
-    MONITORING_TEST ||--o{ METRICS_TESTS : executes
-    MONITORING_TEST ||--o{ DASHBOARD_TESTS : executes
-    MONITORING_TEST ||--o{ ALERT_TESTS : executes
-    
-    INTEGRATION_TEST ||--o{ PLAN_VERIFICATION : executes
-    INTEGRATION_TEST ||--o{ CONFIG_VALIDATION : executes
-    INTEGRATION_TEST ||--o{ DOC_VERIFICATION : executes
-    INTEGRATION_TEST ||--o{ FUNCTIONAL_TESTS : executes
-    
-    STARTUP_TEST ||--o{ DEPENDENCY_CHECKS : executes
-    STARTUP_TEST ||--o{ SERVICE_STARTUP : executes
-    STARTUP_TEST ||--o{ HEALTH_VALIDATION : executes
-    STARTUP_TEST ||--o{ ACCESS_VERIFICATION : executes
-    
-    TEST_SUITE {
-        string suite_id
-        string suite_name
-        string description
-        timestamp execution_time
-        int total_tests
-        int passed_tests
-        int failed_tests
-        string status
-    }
-    
-    TEST_SCRIPTS {
-        string script_name
-        string script_path
-        string purpose
-        string requirements
-        json endpoints_tested
-        string execution_method
-    }
-    
-    TEST_RESULTS {
-        string result_id
-        string test_case_id
-        string status
-        string error_message
-        json result_data
-        float execution_duration
-        timestamp completion_time
-        string validation_details
-    }
-    
-    CONTAINER_TESTS {
-        string container_name
-        string expected_status
-        string actual_status
-        boolean running
-        string image_version
-    }
-    
-    HEALTH_TESTS {
-        string service_name
-        string endpoint_url
-        int expected_status_code
-        int actual_status_code
-        float response_time
-        string health_status
-    }
-    
-    METRICS_TESTS {
-        string exporter_name
-        string metrics_endpoint
-        boolean metrics_available
-        int metric_count
-        string metric_format
-    }
-```
-
-## USE-CASE: Security Configuration and Production Readiness
-
-**Feature 1: Security Hardening and Production Deployment Configuration**
-
-|| definition |
-|--|--|
-| GIVEN | The n8n Docker Stack is configured for development with default credentials and HTTP connections |
-| WHEN | Users need to deploy the stack in production environment with proper security measures |
-| THEN | Security configuration guide provides HTTPS setup, credential management, network isolation, and production-ready configuration options |
-
-**State Diagram: Logic flow within feature**
-
-This diagram shows the security configuration and hardening process for production deployment.
-
-```mermaid
----
-title: Security Configuration State Flow
----
-stateDiagram-v2
-    [*] --> SecurityAssessment
-    SecurityAssessment --> CredentialConfiguration
-    CredentialConfiguration --> HTTPSConfiguration
-    HTTPSConfiguration --> NetworkSecuritySetup
-    NetworkSecuritySetup --> EnvironmentFileSecurement
-    EnvironmentFileSecurement --> AccessControlImplementation
-    AccessControlImplementation --> BackupStrategySetup
-    BackupStrategySetup --> SecurityValidation
-    SecurityValidation --> ProductionReadiness
-    ProductionReadiness --> [*]
-```
-
-**Sequence Diagram: Interactions between systems to enable Feature**
-
-This flowchart shows the security configuration workflow for production deployment.
-
-```mermaid
----
-title: Security Configuration Workflow
----
-flowchart TD
-    A["Security Configuration Start"] --> B["Default Credential Assessment"]
-    B --> C["Generate Strong Passwords"]
-    C --> D["Update Environment Files"]
-    D --> E["HTTPS Certificate Setup"]
-    E --> F["Reverse Proxy Configuration"]
-    F --> G["Network Security Rules"]
-    G --> H["Firewall Configuration"]
-    H --> I["Volume Permissions Setup"]
-    I --> J["Database Security Hardening"]
-    J --> K["Monitoring Security Configuration"]
-    K --> L["Backup Strategy Implementation"]
-    L --> M["Security Validation Testing"]
-    M --> N["Production Deployment"]
-    
-    C --> O["n8n Admin Password"]
-    C --> P["PostgreSQL Password"]
-    C --> Q["Grafana Admin Password"]
-    C --> R["Encryption Keys"]
-    
-    E --> S["SSL/TLS Certificates"]
-    F --> T["nginx/Traefik Setup"]
-    G --> U["Docker Network Isolation"]
-    H --> V["Port Access Control"]
-    I --> W["File System Security"]
-    J --> X["Database Access Control"]
-    K --> Y["Monitoring Authentication"]
-    L --> Z["Automated Backup"]
-    
-    O --> AA["Environment Variable Update"]
-    P --> AA
-    Q --> AA
-    R --> AA
-    
-    S --> BB["HTTPS Enforcement"]
-    T --> BB
-    U --> CC["Network Security"]
-    V --> CC
-    W --> DD["Data Protection"]
-    X --> DD
-    Y --> EE["Monitoring Security"]
-    Z --> EE
-    
-    AA --> FF["Security Configuration Complete"]
-    BB --> FF
-    CC --> FF
-    DD --> FF
-    EE --> FF
-```
-
-**Data Entity Relationships: Data structures that relate to feature**
-
-```mermaid
----
-title: Security Configuration Data Entity Relationships
----
-erDiagram
-    SECURITY_CONFIG ||--o{ CREDENTIAL_MANAGEMENT : includes
-    SECURITY_CONFIG ||--o{ NETWORK_SECURITY : includes
-    SECURITY_CONFIG ||--o{ ACCESS_CONTROL : includes
-    SECURITY_CONFIG ||--o{ DATA_PROTECTION : includes
-    
-    CREDENTIAL_MANAGEMENT ||--o{ ENVIRONMENT_FILES : secures
-    CREDENTIAL_MANAGEMENT ||--o{ PASSWORD_POLICIES : enforces
-    CREDENTIAL_MANAGEMENT ||--o{ ENCRYPTION_KEYS : manages
-    
-    NETWORK_SECURITY ||--o{ HTTPS_CONFIG : implements
-    NETWORK_SECURITY ||--o{ FIREWALL_RULES : configures
-    NETWORK_SECURITY ||--o{ NETWORK_ISOLATION : provides
-    
-    ACCESS_CONTROL ||--o{ USER_AUTHENTICATION : manages
-    ACCESS_CONTROL ||--o{ SERVICE_AUTHORIZATION : controls
-    ACCESS_CONTROL ||--o{ API_SECURITY : implements
-    
-    DATA_PROTECTION ||--o{ BACKUP_STRATEGY : implements
-    DATA_PROTECTION ||--o{ VOLUME_SECURITY : configures
-    DATA_PROTECTION ||--o{ DATABASE_SECURITY : enforces
-    
-    SECURITY_CONFIG {
-        string config_id
-        string environment
-        timestamp created_date
-        string security_level
-        boolean https_enabled
-        boolean auth_configured
-        string compliance_status
-    }
-    
-    CREDENTIAL_MANAGEMENT {
+    SERVICE_CREDENTIALS {
         string service_name
         string credential_type
-        boolean default_changed
-        string strength_level
-        timestamp last_updated
-        string storage_method
+        string secret_file
+        timestamp created_date
+        boolean is_encrypted
     }
     
-    NETWORK_SECURITY {
+    NETWORK_TIERS {
         string network_name
-        string isolation_level
-        json allowed_ports
-        json firewall_rules
-        boolean reverse_proxy_enabled
-        string ssl_certificate_status
+        string subnet_range
+        boolean external_access
+        json access_rules
     }
     
-    ACCESS_CONTROL {
-        string service_name
-        string auth_method
-        json user_roles
-        json api_permissions
-        boolean mfa_enabled
-        string session_management
+    SSL_CERTIFICATES {
+        string cert_type
+        string cert_path
+        string key_path
+        timestamp expiry_date
+        boolean is_valid
     }
     
-    DATA_PROTECTION {
-        string protection_type
-        string backup_frequency
-        string encryption_status
-        json volume_permissions
-        string retention_policy
-        string disaster_recovery_plan
+    BLOCKED_IPS {
+        string ip_address
+        string ban_reason
+        timestamp ban_time
+        int ban_duration
+        string jail_name
     }
+```
+
+**Feature 2: Network Security and Access Control**
+
+|| definition |
+|--|--|
+| GIVEN | Multi-tier network architecture with frontend, backend, and database networks |
+| WHEN | Security-enhanced Docker Compose is deployed with network isolation |
+| THEN | Services are isolated by function with controlled communication paths and no direct database access from external networks |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the network security enforcement and access control flow.
+
+```mermaid
+---
+title: Network Security Access Control State Flow
+---
+stateDiagram-v2
+    [*] --> ExternalRequest
+    ExternalRequest --> FrontendNetwork
+    FrontendNetwork --> NginxReverseProxy
+    NginxReverseProxy --> SecurityHeaderCheck
+    SecurityHeaderCheck --> RateLimitCheck
+    RateLimitCheck --> BackendNetwork
+    BackendNetwork --> n8nApplication
+    n8nApplication --> DatabaseNetwork
+    DatabaseNetwork --> PostgreSQLAccess
+    PostgreSQLAccess --> [*]
+    
+    RateLimitCheck --> Fail2banTrigger
+    Fail2banTrigger --> IPBlocked
+    IPBlocked --> [*]
+```
+
+## USE-CASE: Automated Backup and Disaster Recovery
+
+**Feature 1: Comprehensive Automated Backup System**
+
+|| definition |
+|--|--|
+| GIVEN | A running n8n Docker Stack with PostgreSQL database, n8n data, and configuration files |
+| WHEN | The automated backup script is executed manually or via scheduled cron job |
+| THEN | Complete system backup is created including database dump, volume data, configurations, and workflows with integrity verification |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the comprehensive backup process with verification and cleanup.
+
+```mermaid
+---
+title: Automated Backup Process State Flow
+---
+stateDiagram-v2
+    [*] --> BackupInitialization
+    BackupInitialization --> ContainerHealthCheck
+    ContainerHealthCheck --> DatabaseBackup
+    DatabaseBackup --> VolumeBackup
+    VolumeBackup --> ConfigurationBackup
+    ConfigurationBackup --> WorkflowBackup
+    WorkflowBackup --> IntegrityVerification
+    IntegrityVerification --> BackupCompression
+    BackupCompression --> RetentionCleanup
+    RetentionCleanup --> BackupReport
+    BackupReport --> [*]
+    
+    ContainerHealthCheck --> BackupFailure
+    DatabaseBackup --> BackupFailure
+    VolumeBackup --> BackupFailure
+    IntegrityVerification --> BackupFailure
+    BackupFailure --> [*]
+```
+
+**Sequence Diagram: Interactions between systems to enable Feature**
+
+This flowchart shows the backup system interaction with Docker containers and storage.
+
+```mermaid
+---
+title: Backup System Interaction Flow
+---
+flowchart TD
+    A["Backup Script Execution"] --> B["Docker Container Status Check"]
+    B --> C["PostgreSQL Container"]
+    B --> D["n8n Container"]
+    B --> E["Volume Access"]
+    
+    C --> F["pg_dump Database Export"]
+    F --> G["SQL Compression"]
+    
+    E --> H["n8n Data Volume"]
+    E --> I["Ollama Model Data"]
+    E --> J["Monitoring Data"]
+    
+    H --> K["Volume Archive Creation"]
+    I --> K
+    J --> K
+    
+    A --> L["Configuration File Collection"]
+    L --> M["Docker Compose Files"]
+    L --> N["Environment Files"]
+    L --> O["Security Configurations"]
+    
+    A --> P["Workflow Export"]
+    P --> Q["JSON Workflow Files"]
+    P --> R["Workflow Metadata"]
+    
+    G --> S["Backup Integrity Check"]
+    K --> S
+    M --> S
+    Q --> S
+    
+    S --> T["Backup Archive Creation"]
+    T --> U["Retention Policy Application"]
+    U --> V["Backup Report Generation"]
+```
+
+**Data Entity Relationship: Data structure for entities in Feature**
+
+This diagram shows the backup system data relationships and storage structure.
+
+```mermaid
+---
+title: Backup System Data Entity Relationships
+---
+erDiagram
+    BACKUP_SESSION ||--o{ BACKUP_COMPONENTS : includes
+    BACKUP_SESSION ||--o{ BACKUP_VERIFICATION : validates
+    BACKUP_SESSION ||--o{ BACKUP_REPORT : generates
+    
+    BACKUP_COMPONENTS ||--|| DATABASE_BACKUP : includes
+    BACKUP_COMPONENTS ||--|| VOLUME_BACKUP : includes
+    BACKUP_COMPONENTS ||--|| CONFIG_BACKUP : includes
+    BACKUP_COMPONENTS ||--|| WORKFLOW_BACKUP : includes
+    
+    BACKUP_VERIFICATION ||--o{ INTEGRITY_CHECKS : performs
+    BACKUP_REPORT ||--o{ BACKUP_STATISTICS : contains
+    
+    BACKUP_SESSION {
+        string backup_id
+        timestamp start_time
+        timestamp end_time
+        string backup_directory
+        int total_size_mb
+        string status
+        string backup_type
+    }
+    
+    DATABASE_BACKUP {
+        string dump_file
+        int size_mb
+        string compression_type
+        boolean integrity_verified
+        string postgres_version
+    }
+    
+    VOLUME_BACKUP {
+        string volume_name
+        string archive_file
+        int size_mb
+        int file_count
+        string compression_ratio
+    }
+    
+    CONFIG_BACKUP {
+        string config_type
+        string file_path
+        int size_kb
+        string checksum
+        boolean encrypted
+    }
+    
+    WORKFLOW_BACKUP {
+        string workflow_name
+        string json_file
+        int size_kb
+        timestamp modified_date
+        boolean exported_successfully
+    }
+    
+    INTEGRITY_CHECKS {
+        string check_type
+        string target_file
+        string checksum_algorithm
+        string calculated_hash
+        boolean verification_passed
+    }
+    
+    BACKUP_STATISTICS {
+        string metric_name
+        string metric_value
+        string unit
+        string category
+    }
+```
+
+**Feature 2: Selective Disaster Recovery System**
+
+|| definition |
+|--|--|
+| GIVEN | Backup archives exist for database, n8n data, configurations, and workflows |
+| WHEN | The restore script is executed with specific recovery options (--database, --n8n-data, --configs, --workflows) |
+| THEN | Selected components are restored to specified backup timestamp with service restart and functionality validation |
+
+**State Diagram: Logic flow within feature**
+
+This diagram shows the selective restore process with component-specific recovery options.
+
+```mermaid
+---
+title: Selective Disaster Recovery State Flow
+---
+stateDiagram-v2
+    [*] --> RestoreInitialization
+    RestoreInitialization --> BackupSelection
+    BackupSelection --> ComponentSelection
+    ComponentSelection --> DatabaseRestore
+    ComponentSelection --> VolumeRestore
+    ComponentSelection --> ConfigRestore
+    ComponentSelection --> WorkflowRestore
+    
+    DatabaseRestore --> ServiceStop
+    VolumeRestore --> ServiceStop
+    ConfigRestore --> ServiceStop
+    WorkflowRestore --> ServiceStop
+    
+    ServiceStop --> RestoreExecution
+    RestoreExecution --> IntegrityVerification
+    IntegrityVerification --> ServiceRestart
+    ServiceRestart --> FunctionalityTest
+    FunctionalityTest --> RestoreComplete
+    RestoreComplete --> [*]
+    
+    BackupSelection --> RestoreError
+    RestoreExecution --> RestoreError
+    IntegrityVerification --> RestoreError
+    RestoreError --> [*]
 ```
